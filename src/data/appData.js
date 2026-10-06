@@ -1,0 +1,3 @@
+export const teams=["Hold 1","Hold 2","Hold 3","Skagen M","Berlin HM","CPH Marathon"];
+export const initialRace={distance:21.0975,hours:1,minutes:50,terrain:"Fladt",temp:15,intensity:"Hårdt"};
+export const initialProducts={gel:{name:"Alm. gel",on:true,n:3,carbs:25,caf:0,na:50},caf:{name:"Koffeingel",on:true,n:1,carbs:25,caf:50,na:50},glucose:{name:"Druesukker",on:false,n:0,carbs:3,caf:0,na:0},salt:{name:"Salttablet",on:true,n:2,carbs:0,caf:0,na:250}};
