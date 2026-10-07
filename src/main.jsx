@@ -1,1 +1,1 @@
-import React from "react";import{createRoot}from"react-dom/client";import App from"./App";import"./styles/index.css";createRoot(document.getElementById("root")).render(<React.StrictMode><App/></React.StrictMode>);
+import React from"react";import{createRoot}from"react-dom/client";import App from"./App";import"./styles/index.css";import"./styles/data-pages.css";const root=document.getElementById("root");if(!root)throw new Error('Elementet med id="root" mangler.');createRoot(root).render(<React.StrictMode><App/></React.StrictMode>);

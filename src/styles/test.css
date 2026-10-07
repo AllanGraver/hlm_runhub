@@ -1,0 +1,1 @@
+body{font-family:sans-serif;background:#050817;color:white}.card{padding:20px;background:#101a34}.calendar{display:grid}.stats{display:grid;grid-template-columns:repeat(4,1fr)}.overlay{position:fixed;inset:0;background:#000c}.overlay article{background:#101a34}.accent{color:#19d5ee}
