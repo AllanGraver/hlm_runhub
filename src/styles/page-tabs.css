@@ -1,0 +1,38 @@
+.main > .tabs.race-center-tabs,
+.main > .tabs.guide-calculator-tabs,
+.main > .tabs.tools-tabs {
+  display: grid;
+  width: 100%;
+  max-width: 1540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.main > .tabs.race-center-tabs {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.main > .tabs.guide-calculator-tabs {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.main > .tabs.tools-tabs {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+@media (max-width: 1180px) {
+  .main > .tabs.guide-calculator-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .main > .tabs.tools-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .main > .tabs.guide-calculator-tabs,
+  .main > .tabs.tools-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

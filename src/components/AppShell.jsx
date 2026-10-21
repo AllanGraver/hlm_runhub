@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { teams } from "../data/appData";
 import "../styles/branding.css";
+import "../styles/page-tabs.css";
 import harlevLogo from "../assets/harlev-lob-motion.png";
 const nav = [
   ["training", "Træning", Footprints],
