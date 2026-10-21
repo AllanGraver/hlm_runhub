@@ -1,0 +1,342 @@
+.runner-strength {
+  display: grid;
+  gap: 12px;
+}
+
+.strength-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 17px;
+  border: 1px solid rgba(25, 213, 238, 0.33);
+  border-radius: 14px;
+  background: linear-gradient(115deg, rgba(25, 213, 238, 0.09), #0b1124 72%);
+}
+
+.strength-hero-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 1px solid rgba(25, 213, 238, 0.3);
+  border-radius: 10px;
+  background: rgba(25, 213, 238, 0.1);
+  color: #19d5ee;
+}
+
+.strength-hero > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.strength-hero small,
+.strength-stats small,
+.strength-plan-heading small {
+  color: #19d5ee;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.strength-hero h2 {
+  margin: 1px 0 0;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.strength-hero p {
+  max-width: 850px;
+  margin: 6px 0 0;
+  color: #bdc9db;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.strength-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.strength-stats article {
+  display: flex;
+  min-height: 62px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 10px;
+  border: 1px solid #26314d;
+  border-radius: 10px;
+  background: rgba(11, 17, 36, 0.9);
+}
+
+.strength-stats small {
+  font-size: 8px;
+}
+
+.strength-stats strong {
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.strength-stats span {
+  color: #95a3bf;
+  font-size: 9px;
+}
+
+.strength-guidance,
+.strength-safety {
+  padding: 12px;
+  border: 1px solid #26314d;
+  border-radius: 12px;
+  background: rgba(11, 17, 36, 0.88);
+}
+
+.strength-guidance h3,
+.strength-safety h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.strength-guidance h3 svg {
+  color: #19d5ee;
+}
+
+.strength-guidance > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.strength-guidance > div > p {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid #26314d;
+  border-radius: 9px;
+  background: rgba(5, 8, 23, 0.4);
+}
+
+.strength-guidance b {
+  color: #dce7f5;
+  font-size: 10px;
+}
+
+.strength-guidance span {
+  color: #aebbd0;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.strength-plan-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.strength-plan-heading h2 {
+  margin: 1px 0 0;
+  font-size: 15px;
+}
+
+.strength-plan-heading > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 7px;
+  border: 1px solid rgba(25, 213, 238, 0.24);
+  border-radius: 99px;
+  color: #19d5ee;
+  font-size: 8px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.strength-session-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.strength-session {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #26314d;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #10182d, #0b1124);
+}
+
+.strength-session > header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.strength-session > header > span {
+  display: grid;
+  width: 31px;
+  height: 25px;
+  flex: 0 0 31px;
+  place-items: center;
+  border: 1px solid rgba(25, 213, 238, 0.28);
+  border-radius: 7px;
+  background: rgba(25, 213, 238, 0.08);
+  color: #19d5ee;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.strength-session > header h3 {
+  margin: 0;
+  font-size: 13px;
+}
+
+.strength-session > header small {
+  color: #95a3bf;
+  font-size: 9px;
+}
+
+.strength-exercise-list {
+  display: grid;
+  gap: 6px;
+}
+
+.strength-exercise {
+  padding: 8px;
+  border: 1px solid #26314d;
+  border-radius: 9px;
+  background: rgba(5, 8, 23, 0.36);
+}
+
+.strength-exercise-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.strength-exercise-heading > span {
+  display: grid;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  place-items: center;
+  border-radius: 6px;
+  background: rgba(69, 214, 153, 0.1);
+  color: #6ee7b7;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.strength-exercise-heading h4 {
+  min-width: 0;
+  flex: 1;
+  margin: 0;
+  font-size: 10px;
+}
+
+.strength-exercise-heading > strong {
+  color: #a9eaf1;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.strength-exercise > p {
+  margin: 5px 0 0 25px;
+  color: #bdc9db;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.strength-exercise > small {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 5px 0 0 25px;
+  color: #95a3bf;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.strength-exercise > small svg {
+  flex: 0 0 auto;
+  color: #45d699;
+}
+
+.strength-rest {
+  margin: 8px 0 0;
+  padding: 7px 8px;
+  border: 1px solid rgba(25, 213, 238, 0.18);
+  border-radius: 7px;
+  color: #aebbd0;
+  font-size: 8px;
+  line-height: 1.45;
+}
+
+.strength-safety {
+  border-color: rgba(255, 212, 71, 0.3);
+  background: rgba(255, 212, 71, 0.035);
+}
+
+.strength-safety h3 svg {
+  color: #ffd447;
+}
+
+.strength-safety ul {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding-left: 17px;
+  color: #dce7f5;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.strength-safety li::marker {
+  color: #ffd447;
+}
+
+.strength-note {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 212, 71, 0.34);
+  border-radius: 9px;
+  background: rgba(255, 212, 71, 0.05);
+  color: #ffe9ad;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.strength-note a {
+  color: #19d5ee;
+}
+
+@media (max-width: 820px) {
+  .strength-session-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .strength-hero {
+    padding: 12px;
+  }
+
+  .strength-hero h2 {
+    font-size: 21px;
+  }
+
+  .strength-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .strength-guidance > div {
+    grid-template-columns: 1fr;
+  }
+}

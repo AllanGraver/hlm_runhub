@@ -1,0 +1,475 @@
+.training-load-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 16px 19px;
+  border: 1px solid rgba(25, 213, 238, 0.28);
+  border-radius: 16px;
+  background: rgba(11, 17, 36, 0.88);
+}
+
+.guide-calculator-tabs {
+  margin-bottom: 16px;
+}
+
+.guide-calculator-content[hidden] {
+  display: none;
+}
+
+.guide-calculator-tabs button {
+  min-width: 190px;
+}
+
+.training-load-notes section + section {
+  padding-left: 18px;
+  border-left: 1px solid #26314d;
+}
+
+.training-load-notes small {
+  color: #19d5ee;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.training-load-notes h2 {
+  margin: 5px 0 0;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.training-load-notes p {
+  margin: 5px 0 0;
+  font-size: 13px;
+}
+
+.training-load-grid {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 18px;
+}
+
+.training-load-form-card {
+  padding: 20px;
+}
+
+.training-load-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.training-load-heading > span {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(25, 213, 238, 0.12);
+  color: #19d5ee;
+}
+
+.training-load-heading h2,
+.training-load-heading p,
+.training-load-volume h3,
+.training-load-volume p {
+  margin: 0;
+}
+
+.training-load-heading h2 {
+  font-size: 16px;
+}
+
+.training-load-heading p,
+.training-load-volume p {
+  font-size: 11px;
+}
+
+.training-load-form-card form > label,
+.training-load-fields label {
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+.training-load-form-card input,
+.training-load-form-card select {
+  min-height: 38px;
+  padding: 7px 9px;
+}
+
+.training-load-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.training-rpe-control {
+  display: block;
+  margin: 12px 0 7px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.training-rpe-control input[type="range"] {
+  height: 24px;
+  padding: 0;
+  accent-color: #19d5ee;
+}
+
+.training-rpe-control > span {
+  display: flex;
+  justify-content: space-between;
+  color: #95a3bf;
+}
+
+.training-rpe-hint {
+  padding: 9px 11px;
+  border: 1px solid #26314d;
+  border-radius: 9px;
+  background: rgba(5, 8, 23, 0.35);
+  color: #95a3bf;
+  font-size: 10px;
+}
+
+.training-load-volume {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #26314d;
+}
+
+.training-load-volume h3 {
+  font-size: 13px;
+}
+
+.training-load-form-card .primary {
+  min-height: 42px;
+  margin-top: 8px;
+  padding: 9px 14px;
+  font-size: 13px;
+}
+
+.training-load-result {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  gap: 11px;
+  padding: 20px;
+  border: 1px solid rgba(25, 213, 238, 0.34);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(25, 213, 238, 0.08), #081225);
+}
+
+.training-load-result-label {
+  color: #19d5ee;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.training-load-score {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: clamp(42px, 5vw, 58px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.training-load-score span {
+  color: #95a3bf;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.training-load-status,
+.training-volume-result {
+  padding: 12px 14px;
+  border: 1px solid #26314d;
+  border-radius: 11px;
+  background: rgba(5, 8, 23, 0.4);
+}
+
+.training-load-status strong {
+  font-size: 12px;
+}
+
+.training-load-status p,
+.training-volume-result p {
+  margin: 3px 0 0;
+  color: #c2cee0;
+  font-size: 11px;
+}
+
+.training-load-status.light strong,
+.training-load-how article:first-child strong {
+  color: #45d699;
+}
+
+.training-load-status.moderate strong,
+.training-volume-status,
+.training-load-how article:nth-child(2) strong {
+  color: #ffd447;
+}
+
+.training-load-status.high strong,
+.training-load-how article:last-child strong {
+  color: #fb7185;
+}
+
+.training-load-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.training-load-summary > div {
+  display: flex;
+  min-height: 56px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: rgba(5, 8, 23, 0.42);
+}
+
+.training-load-summary small {
+  font-size: 10px;
+}
+
+.training-load-summary strong {
+  font-size: 12px;
+}
+
+.training-volume-result {
+  margin-top: auto;
+}
+
+.training-volume-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #19d5ee;
+  font-size: 12px;
+}
+
+.training-volume-status {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 11px;
+}
+
+.training-volume-result > small {
+  display: block;
+  margin-top: 7px;
+  font-size: 10px;
+}
+
+.training-load-empty {
+  display: grid;
+  flex: 1;
+  align-content: center;
+  justify-items: center;
+  padding: 30px 12px;
+  color: #19d5ee;
+  text-align: center;
+}
+
+.training-load-empty strong {
+  margin-top: 9px;
+  color: #f5f7ff;
+}
+
+.training-load-empty p {
+  max-width: 300px;
+  margin: 3px 0 0;
+  font-size: 12px;
+}
+
+.training-load-how {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #26314d;
+  border-radius: 16px;
+  background: rgba(11, 17, 36, 0.88);
+}
+
+.training-load-how h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.training-load-how > p {
+  margin: 5px 0 12px;
+  font-size: 11px;
+}
+
+.training-load-how > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.training-load-how article {
+  padding: 10px 12px;
+  border: 1px solid #26314d;
+  border-radius: 10px;
+  background: rgba(5, 8, 23, 0.35);
+}
+
+.training-load-how article strong {
+  font-size: 11px;
+}
+
+.training-load-how article p {
+  margin: 3px 0 0;
+  font-size: 10px;
+}
+
+.training-load-disclaimer {
+  margin: 12px 0 20px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 212, 71, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 212, 71, 0.06);
+  color: #ffe9ad;
+  font-size: 11px;
+}
+
+.recovery-result-title {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.2;
+}
+
+.recovery-window-values {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.recovery-window-values > div {
+  display: flex;
+  min-height: 62px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(5, 8, 23, 0.42);
+}
+
+.recovery-window-values small {
+  font-size: 10px;
+}
+
+.recovery-window-values strong {
+  color: #f5f7ff;
+  font-size: 16px;
+}
+
+.recovery-message {
+  border-color: rgba(25, 213, 238, 0.3);
+}
+
+.recovery-message strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #19d5ee;
+}
+
+.recovery-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.recovery-explanation {
+  margin-top: 18px;
+}
+
+.recovery-explanation article:first-child strong {
+  color: #45d699;
+}
+
+.recovery-explanation article:nth-child(2) strong {
+  color: #fb7185;
+}
+
+.recovery-explanation article:last-child strong {
+  color: #19d5ee;
+}
+
+.recovery-fields {
+  gap: 8px;
+}
+
+.recovery-fields label {
+  min-width: 0;
+}
+
+.guide-library {
+  margin-top: 22px;
+}
+
+.guide-library > h2 {
+  margin-bottom: 12px;
+  font-size: 17px;
+}
+
+.guide-library .cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  .training-load-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .training-load-notes {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px 15px;
+  }
+
+  .training-load-notes section + section {
+    padding-top: 10px;
+    padding-left: 0;
+    border-top: 1px solid #26314d;
+    border-left: 0;
+  }
+
+  .training-load-notes h2 {
+    font-size: 15px;
+  }
+
+  .training-load-form-card,
+  .training-load-result,
+  .training-load-how {
+    padding: 15px;
+  }
+
+  .guide-calculator-tabs button {
+    min-width: 0;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .recovery-window-values > div {
+    padding: 8px 9px;
+  }
+
+  .recovery-window-values strong {
+    font-size: 14px;
+  }
+
+  .training-load-how > div,
+  .guide-library .cards {
+    grid-template-columns: 1fr;
+  }
+}

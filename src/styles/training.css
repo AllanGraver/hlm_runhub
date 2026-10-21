@@ -1,0 +1,738 @@
+.team-training-card {
+  padding: clamp(16px, 2vw, 28px);
+}
+
+.training-plan-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+  border-color: rgba(25, 213, 238, 0.35);
+}
+
+.training-plan-banner > div {
+  display: grid;
+  gap: 3px;
+}
+
+.training-plan-banner small {
+  color: #19d5ee;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.training-plan-banner strong {
+  font-size: 19px;
+}
+
+.training-plan-banner span {
+  color: #95a3bf;
+  font-size: 13px;
+}
+
+.training-plan-week {
+  min-width: 180px;
+  padding-left: 18px;
+  border-left: 1px solid #26314d;
+}
+
+.training-club-peak {
+  display: grid;
+  min-width: 160px;
+  gap: 3px;
+  padding-left: 18px;
+  border-left: 1px solid #26314d;
+}
+
+.training-club-peak small {
+  color: #19d5ee;
+}
+
+.training-plan-peak {
+  display: grid;
+  min-width: 180px;
+  gap: 3px;
+  padding-left: 18px;
+  border-left: 1px solid #26314d;
+}
+
+.training-plan-peak small {
+  color: #45d699;
+}
+
+.training-plan-hint,
+.training-data-error {
+  margin: 0 0 16px;
+  padding: 13px 16px;
+  border: 1px solid rgba(255, 200, 107, 0.35);
+  border-radius: 12px;
+  background: rgba(255, 200, 107, 0.07);
+  color: #ffd58b;
+}
+
+.training-data-error {
+  border-color: rgba(255, 155, 155, 0.4);
+  background: rgba(255, 80, 80, 0.08);
+  color: #ffb0b0;
+}
+
+.team-training-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.team-training-toolbar h2 {
+  margin: 0;
+  font-size: 18px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.team-training-toolbar button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border: 1px solid #26314d;
+  border-radius: 9px;
+  background: transparent;
+  color: #f5f7ff;
+}
+
+.team-training-toolbar button:hover {
+  border-color: #19d5ee;
+  color: #19d5ee;
+}
+
+.team-training-table-wrap {
+  overflow-x: auto;
+}
+
+.team-training-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  text-align: left;
+}
+
+.team-training-table th,
+.team-training-table td {
+  padding: 12px 14px;
+}
+
+.team-training-table thead th {
+  padding-top: 4px;
+  padding-bottom: 10px;
+  color: #95a3bf;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.team-training-table thead th:not(:first-child) {
+  border-left: 1px solid rgba(38, 49, 77, 0.8);
+  color: #19d5ee;
+  font-size: 14px;
+  text-align: left;
+}
+
+.team-training-table tbody th {
+  width: 125px;
+  color: #dce7f5;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.team-training-table tbody th small {
+  display: block;
+  margin-top: 3px;
+  color: #95a3bf;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.team-training-table tbody td {
+  border-top: 1px solid #26314d;
+  border-bottom: 1px solid #26314d;
+  background: rgba(5, 8, 23, 0.28);
+  vertical-align: middle;
+}
+
+.team-training-table tbody td + td {
+  border-left: 1px solid rgba(38, 49, 77, 0.8);
+}
+
+.team-training-table tbody td:first-of-type {
+  border-left: 1px solid #26314d;
+  border-radius: 9px 0 0 9px;
+}
+
+.team-training-table tbody td:last-child {
+  border-right: 1px solid #26314d;
+  border-radius: 0 9px 9px 0;
+}
+
+.training-day-row.selected td,
+.training-day-row.selected th {
+  border-bottom-color: rgba(25, 213, 238, 0.45);
+}
+
+.training-day-button {
+  display: grid;
+  width: 100%;
+  gap: 3px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: #dce7f5;
+  text-align: left;
+}
+
+.training-day-button small {
+  color: #95a3bf;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.training-day-button:hover strong {
+  color: #19d5ee;
+}
+
+.training-day-button:focus-visible,
+.actual-run-button:focus-visible {
+  border-radius: 6px;
+  outline: 2px solid #19d5ee;
+  outline-offset: 3px;
+}
+
+.club-day-workouts,
+.own-day-workouts {
+  display: grid;
+  gap: 7px;
+}
+
+.club-day-workouts > span,
+.own-day-workouts > span {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: #dce7f5;
+  font-size: 12px;
+}
+
+.club-day-workouts > span {
+  justify-content: flex-start;
+}
+
+.club-day-workouts b {
+  flex: 0 0 51px;
+  color: #19d5ee;
+  font-size: 11px;
+}
+
+.club-workout-description {
+  display: grid;
+  gap: 2px;
+}
+
+.club-workout-description small {
+  color: #95a3bf;
+  font-size: 10px;
+}
+
+.own-day-workouts > span {
+  justify-content: flex-start;
+}
+
+.training-rest {
+  color: #95a3bf;
+  font-size: 12px;
+}
+
+.actual-run-button {
+  display: flex;
+  min-height: 38px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 7px 10px;
+  border: 1px solid #26314d;
+  border-radius: 9px;
+  background: rgba(5, 8, 23, 0.4);
+  color: #95a3bf;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.actual-run-button:hover,
+.actual-run-button.recorded {
+  border-color: rgba(69, 214, 153, 0.55);
+  color: #45d699;
+}
+
+.actual-run-button.recorded strong {
+  color: #45d699;
+}
+
+.actual-run-button span,
+.actual-training-detail p {
+  font-size: 11px;
+}
+
+.training-detail-row td {
+  padding: 0 !important;
+  border: 1px solid rgba(25, 213, 238, 0.3);
+  border-radius: 12px;
+  background: rgba(5, 8, 23, 0.56) !important;
+}
+
+.training-day-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr minmax(230px, 0.85fr);
+  gap: 20px;
+  padding: 20px;
+  text-align: left;
+}
+
+.training-day-detail h3 {
+  margin: 0 0 12px;
+  color: #19d5ee;
+  font-size: 16px;
+}
+
+.training-day-detail h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.training-day-detail p {
+  margin: 6px 0;
+  font-size: 12px;
+}
+
+.actual-training-detail {
+  padding: 14px;
+  border: 1px solid #26314d;
+  border-radius: 12px;
+  background: rgba(16, 26, 52, 0.55);
+}
+
+.team-table-workout,
+.team-table-rest {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.team-table-workout-button {
+  display: flex;
+  width: 100%;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.team-table-workout-button:hover .team-table-workout-type > strong {
+  color: #19d5ee;
+}
+
+.team-table-workout-button:focus-visible {
+  border-radius: 6px;
+  outline: 2px solid #19d5ee;
+  outline-offset: 3px;
+}
+
+.team-table-workout-type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.team-table-workout-type .zone-symbol {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border-radius: 8px;
+}
+
+.team-table-workout-type > strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-table-workout > b,
+.team-table-rest > b {
+  color: #f5f7ff;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.team-table-rest > span {
+  color: #95a3bf;
+  font-size: 13px;
+}
+
+.team-training-table tfoot th,
+.team-training-table tfoot td {
+  padding-top: 16px;
+  color: #95a3bf;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.team-training-table tfoot td {
+  border-left: 1px solid rgba(38, 49, 77, 0.8);
+  color: #19d5ee;
+  font-size: 18px;
+  text-align: center;
+}
+
+.team-training-table tfoot td:nth-child(2) {
+  text-align: left;
+}
+
+.training-total {
+  display: inline-block;
+  margin: 0 9px 4px 0;
+  white-space: nowrap;
+}
+
+.team-training-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 16px;
+  border-top: 1px solid #26314d;
+  color: #95a3bf;
+  font-size: 13px;
+}
+
+.team-training-footer .primary {
+  min-height: 40px;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+
+.training-load-card {
+  margin-top: 22px;
+}
+
+.training-load-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.training-load-heading > div:first-child > small {
+  color: #19d5ee;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.training-load-heading h2 {
+  margin: 4px 0;
+  font-size: 21px;
+}
+
+.training-load-heading p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.training-load-factors {
+  max-width: 300px;
+  color: #95a3bf;
+  font-size: 12px;
+  text-align: right;
+}
+
+.training-load-chart-wrap {
+  margin: 18px 0 0;
+  padding: 12px 8px 4px;
+  border: 1px solid #26314d;
+  border-radius: 13px;
+  background: rgba(5, 8, 23, 0.4);
+}
+
+.training-load-chart {
+  display: block;
+  width: 100%;
+  height: 190px;
+  overflow: visible;
+}
+
+.training-load-gridline {
+  stroke: #26314d;
+  stroke-dasharray: 4 5;
+  stroke-width: 1;
+}
+
+.training-load-axis-label {
+  fill: #95a3bf;
+  font-size: 11px;
+}
+
+.training-load-line {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.load-series-hold-2 .training-load-line,
+.load-series-hold-2 circle,
+.load-legend-hold-2 > span:first-child {
+  stroke: #19d5ee;
+  fill: #19d5ee;
+  background: #19d5ee;
+}
+
+.load-series-hold-3 .training-load-line,
+.load-series-hold-3 circle,
+.load-legend-hold-3 > span:first-child {
+  stroke: #45d699;
+  fill: #45d699;
+  background: #45d699;
+}
+
+.training-load-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  margin-top: 14px;
+}
+
+.training-load-legend > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.training-load-legend > div > span:first-child {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  border-radius: 50%;
+}
+
+.training-load-legend > div > span:last-child {
+  color: #95a3bf;
+}
+
+.training-load-note {
+  margin: 14px 0 0;
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .training-plan-banner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .training-plan-week,
+  .training-club-peak,
+  .training-plan-peak {
+    width: 100%;
+    padding-top: 12px;
+    padding-left: 0;
+    border-top: 1px solid #26314d;
+    border-left: 0;
+  }
+
+  .team-training-toolbar h2 {
+    font-size: 15px;
+  }
+
+  .team-training-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .training-load-heading {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .training-load-factors {
+    max-width: none;
+    text-align: left;
+  }
+
+  .training-day-detail {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 15px;
+  }
+
+  .team-training-table-wrap {
+    overflow: visible;
+  }
+
+  .team-training-table,
+  .team-training-table tbody,
+  .team-training-table tfoot {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .team-training-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .team-training-table tbody tr.training-day-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #26314d;
+    border-radius: 12px;
+    background: rgba(5, 8, 23, 0.28);
+  }
+
+  .team-training-table tbody tr.training-day-row th {
+    grid-column: 1 / -1;
+    width: auto;
+    padding: 2px 2px 6px;
+  }
+
+  .team-training-table tbody tr.training-day-row td {
+    min-width: 0;
+    padding: 8px;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(16, 26, 52, 0.45);
+  }
+
+  .team-training-table tbody tr.training-day-row td:first-of-type {
+    display: block;
+    grid-column: 1 / -1;
+    border-radius: 8px;
+  }
+
+  .team-training-table tbody tr.training-day-row td:nth-of-type(2),
+  .team-training-table tbody tr.training-day-row td:nth-of-type(3) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .team-training-table tbody tr.training-day-row td:nth-of-type(1)::before,
+  .team-training-table tbody tr.training-day-row td:nth-of-type(2)::before,
+  .team-training-table tbody tr.training-day-row td:nth-of-type(3)::before {
+    color: #95a3bf;
+    font-size: 10px;
+    font-weight: 850;
+  }
+
+  .team-training-table tbody tr.training-day-row td:nth-of-type(1)::before {
+    content: "Klubbens træning";
+    margin-bottom: 4px;
+  }
+
+  .team-training-table tbody tr.training-day-row td:nth-of-type(2)::before {
+    content: "Egen ambition";
+  }
+
+  .team-training-table tbody tr.training-day-row td:nth-of-type(3)::before {
+    content: "Reel træning";
+  }
+
+  .club-day-workouts > span,
+  .own-day-workouts > span {
+    flex-wrap: wrap;
+  }
+
+  .actual-run-button {
+    width: 100%;
+    white-space: normal;
+  }
+
+  .team-training-table tbody tr.training-detail-row {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .team-training-table tbody tr.training-detail-row td {
+    display: block;
+    width: 100%;
+  }
+
+  .team-training-table tfoot tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px;
+    border-top: 1px solid #26314d;
+  }
+
+  .team-training-table tfoot th {
+    grid-column: 1 / -1;
+    padding: 0;
+  }
+
+  .team-training-table tfoot td {
+    min-width: 0;
+    padding: 8px;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(5, 8, 23, 0.35);
+    font-size: 12px;
+    text-align: left;
+  }
+
+  .team-training-table tfoot td:first-of-type {
+    grid-column: 1 / -1;
+  }
+
+  .team-training-table tfoot td:nth-of-type(2)::before,
+  .team-training-table tfoot td:nth-of-type(3)::before {
+    display: block;
+    margin-bottom: 3px;
+    color: #95a3bf;
+    font-size: 10px;
+    text-align: left;
+  }
+
+  .team-training-table tfoot td:nth-of-type(2)::before {
+    content: "Egen ambition";
+  }
+
+  .team-training-table tfoot td:nth-of-type(3)::before {
+    content: "Reel træning";
+  }
+}

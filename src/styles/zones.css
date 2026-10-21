@@ -1,0 +1,33 @@
+.zone-symbol {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  place-items: center;
+  border-radius: 6px;
+  background: var(--zone-color);
+  color: #111827;
+  font-size: 12px;
+  font-weight: 900;
+  vertical-align: middle;
+}
+
+.zone-e {
+  --zone-color: #22c55e;
+}
+
+.zone-m {
+  --zone-color: #eab308;
+}
+
+.zone-t {
+  --zone-color: #f97316;
+}
+
+.zone-i {
+  --zone-color: #ef4444;
+}
+
+.zone-r {
+  --zone-color: #8b5cf6;
+}

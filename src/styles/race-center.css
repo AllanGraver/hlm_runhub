@@ -1,0 +1,52 @@
+.pacing-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 16px 19px;
+  border: 1px solid rgba(25, 213, 238, 0.28);
+  border-radius: 16px;
+  background: rgba(11, 17, 36, 0.88);
+}
+
+.pacing-notes section + section {
+  padding-left: 18px;
+  border-left: 1px solid #26314d;
+}
+
+.pacing-notes small {
+  color: #19d5ee;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.pacing-notes h2 {
+  margin: 5px 0 0;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.pacing-notes p {
+  margin: 5px 0 0;
+  font-size: 13px;
+}
+
+@media (max-width: 620px) {
+  .pacing-notes {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px 15px;
+  }
+
+  .pacing-notes section + section {
+    padding-top: 10px;
+    padding-left: 0;
+    border-top: 1px solid #26314d;
+    border-left: 0;
+  }
+
+  .pacing-notes h2 {
+    font-size: 15px;
+  }
+}

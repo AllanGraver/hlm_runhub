@@ -1,0 +1,315 @@
+.pace-converter {
+  display: grid;
+  gap: 12px;
+}
+
+.pace-calculator,
+.pace-reference {
+  padding: 14px;
+  border: 1px solid #26314d;
+  border-radius: 14px;
+  background: rgba(11, 17, 36, 0.9);
+}
+
+.pace-calculator-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.pace-calculator-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border: 1px solid rgba(25, 213, 238, 0.3);
+  border-radius: 10px;
+  background: rgba(25, 213, 238, 0.1);
+  color: #19d5ee;
+}
+
+.pace-calculator-heading small,
+.pace-reference-heading small {
+  color: #19d5ee;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.pace-calculator-heading h2 {
+  margin: 1px 0 0;
+  font-size: 19px;
+}
+
+.pace-mode-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 11px;
+  padding: 4px;
+  border: 1px solid #26314d;
+  border-radius: 10px;
+  background: rgba(5, 8, 23, 0.52);
+}
+
+.pace-mode-tabs button {
+  flex: 1 1 auto;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: #aebbd0;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.pace-mode-tabs button:hover {
+  color: #dce7f5;
+}
+
+.pace-mode-tabs button.active {
+  border-color: rgba(25, 213, 238, 0.3);
+  background: rgba(25, 213, 238, 0.1);
+  color: #a9eaf1;
+}
+
+.pace-calculation-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(245px, 0.8fr);
+  gap: 10px;
+}
+
+.pace-input-panel,
+.pace-result-panel {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #26314d;
+  border-radius: 10px;
+  background: rgba(5, 8, 23, 0.42);
+}
+
+.pace-input-panel h3 {
+  margin: 0;
+  font-size: 13px;
+}
+
+.pace-input-panel > p:not(.pace-validation) {
+  margin: 4px 0 10px;
+  color: #95a3bf;
+  font-size: 9px;
+}
+
+.pace-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.pace-input-row label {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 4px;
+  color: #aebbd0;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.pace-input-row input {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  padding: 7px 9px;
+  border: 1px solid #34415e;
+  border-radius: 7px;
+  background: #0b1124;
+  color: #f1f5f9;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pace-input-row input:focus {
+  border-color: #19d5ee;
+  outline: 2px solid rgba(25, 213, 238, 0.16);
+}
+
+.pace-time-separator {
+  padding-bottom: 9px;
+  color: #95a3bf;
+  font-size: 20px;
+  font-weight: 850;
+}
+
+.pace-unit {
+  padding: 0 2px 9px;
+  color: #95a3bf;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.pace-time-inputs label {
+  flex: 1 1 0;
+}
+
+.pace-validation {
+  margin: 8px 0 0;
+  color: #fda4af;
+  font-size: 9px;
+}
+
+.pace-result-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-color: rgba(25, 213, 238, 0.26);
+  background: linear-gradient(145deg, rgba(25, 213, 238, 0.055), rgba(5, 8, 23, 0.5));
+}
+
+.pace-result-panel > small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #19d5ee;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.pace-primary-result {
+  display: grid;
+  gap: 2px;
+  margin: 8px 0;
+}
+
+.pace-primary-result strong {
+  color: #eafcff;
+  font-size: clamp(24px, 4vw, 34px);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.pace-primary-result span,
+.pace-secondary-results span {
+  color: #95a3bf;
+  font-size: 9px;
+}
+
+.pace-secondary-results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.pace-secondary-results > div {
+  display: grid;
+  gap: 3px;
+  padding: 7px;
+  border: 1px solid #26314d;
+  border-radius: 7px;
+  background: rgba(5, 8, 23, 0.42);
+}
+
+.pace-secondary-results strong {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pace-reference-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.pace-reference-heading h3 {
+  margin: 1px 0 0;
+  font-size: 14px;
+}
+
+.pace-reference-heading > span {
+  color: #95a3bf;
+  font-size: 8px;
+}
+
+.pace-reference-table {
+  overflow: hidden;
+  border: 1px solid #26314d;
+  border-radius: 9px;
+}
+
+.pace-reference-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 7px 9px;
+  border-top: 1px solid rgba(38, 49, 77, 0.75);
+  color: #cbd5e1;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pace-reference-row:first-child {
+  border-top: 0;
+}
+
+.pace-reference-header {
+  background: rgba(25, 213, 238, 0.07);
+  color: #a9eaf1;
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.pace-reference-row > :not(:first-child) {
+  text-align: right;
+}
+
+.pace-reference-row strong {
+  color: #f1f5f9;
+}
+
+.pace-converter-note {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 212, 71, 0.28);
+  border-radius: 9px;
+  background: rgba(255, 212, 71, 0.04);
+  color: #ffe9ad;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .pace-calculation-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .pace-calculator,
+  .pace-reference {
+    padding: 10px;
+  }
+
+  .pace-calculator-heading h2 {
+    font-size: 17px;
+  }
+
+  .pace-mode-tabs {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .pace-mode-tabs button {
+    text-align: left;
+  }
+
+  .pace-reference-row {
+    gap: 3px;
+    padding: 7px 6px;
+    font-size: 8px;
+  }
+}

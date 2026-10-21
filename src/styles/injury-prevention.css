@@ -1,0 +1,301 @@
+.injury-guide {
+  display: grid;
+  gap: 12px;
+}
+
+.injury-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 17px;
+  border: 1px solid rgba(25, 213, 238, 0.33);
+  border-radius: 14px;
+  background: linear-gradient(115deg, rgba(25, 213, 238, 0.09), #0b1124 72%);
+}
+
+.injury-hero-icon {
+  display: grid;
+  width: 37px;
+  height: 37px;
+  flex: 0 0 37px;
+  place-items: center;
+  border: 1px solid rgba(25, 213, 238, 0.3);
+  border-radius: 10px;
+  background: rgba(25, 213, 238, 0.1);
+  color: #19d5ee;
+}
+
+.injury-hero small,
+.injury-stats small,
+.injury-list-heading small,
+.injury-card-heading small {
+  color: #19d5ee;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.injury-hero h2 {
+  margin: 1px 0 0;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.injury-hero p {
+  max-width: 900px;
+  margin: 6px 0 0;
+  color: #bdc9db;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.injury-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.injury-stats article {
+  display: flex;
+  min-height: 62px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 10px;
+  border: 1px solid #26314d;
+  border-radius: 10px;
+  background: rgba(11, 17, 36, 0.9);
+}
+
+.injury-stats small {
+  font-size: 8px;
+}
+
+.injury-stats strong {
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.injury-stats span {
+  color: #95a3bf;
+  font-size: 9px;
+}
+
+.injury-howto {
+  padding: 12px;
+  border: 1px solid #26314d;
+  border-radius: 12px;
+  background: rgba(11, 17, 36, 0.88);
+}
+
+.injury-howto h2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.injury-howto h2 svg {
+  color: #19d5ee;
+}
+
+.injury-howto > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.injury-howto article {
+  padding: 8px;
+  border: 1px solid #26314d;
+  border-radius: 9px;
+  background: rgba(5, 8, 23, 0.4);
+}
+
+.injury-howto article b {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.injury-howto article b span {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  place-items: center;
+  border-radius: 6px;
+  background: rgba(25, 213, 238, 0.12);
+  color: #19d5ee;
+}
+
+.injury-howto article p {
+  margin: 5px 0 0;
+  color: #aebbd0;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.injury-list-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 1px;
+}
+
+.injury-list-heading h2 {
+  margin: 1px 0 0;
+  font-size: 15px;
+}
+
+.injury-list-heading > span {
+  padding: 4px 8px;
+  border: 1px solid rgba(25, 213, 238, 0.25);
+  border-radius: 99px;
+  color: #19d5ee;
+  font-size: 8px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.injury-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.injury-card {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #26314d;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #10182d, #0b1124);
+}
+
+.injury-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 7px;
+  margin-bottom: 5px;
+}
+
+.injury-card-heading small {
+  font-size: 7px;
+}
+
+.injury-card-heading h3 {
+  margin: 1px 0 0;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.injury-tag {
+  flex: 0 0 auto;
+  padding: 3px 6px;
+  border: 1px solid rgba(251, 113, 133, 0.42);
+  border-radius: 99px;
+  color: #fda4af;
+  font-size: 7px;
+  font-weight: 850;
+}
+
+.injury-summary {
+  margin: 0 0 6px;
+  color: #aebbd0;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.injury-advice {
+  margin-top: 5px;
+  padding: 6px 7px;
+  border: 1px solid;
+  border-radius: 7px;
+}
+
+.injury-advice strong {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+}
+
+.injury-advice p {
+  margin: 3px 0 0;
+  color: #dce7f5;
+  font-size: 8px;
+  line-height: 1.45;
+}
+
+.injury-signs {
+  border-color: rgba(251, 113, 133, 0.38);
+  background: rgba(251, 113, 133, 0.045);
+}
+
+.injury-signs strong {
+  color: #fda4af;
+}
+
+.injury-helps {
+  border-color: rgba(69, 214, 153, 0.35);
+  background: rgba(69, 214, 153, 0.045);
+}
+
+.injury-helps strong {
+  color: #6ee7b7;
+}
+
+.injury-avoid {
+  border-color: rgba(255, 212, 71, 0.36);
+  background: rgba(255, 212, 71, 0.04);
+}
+
+.injury-avoid strong {
+  color: #ffd447;
+}
+
+.injury-disclaimer {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 212, 71, 0.38);
+  border-radius: 9px;
+  background: rgba(255, 212, 71, 0.055);
+  color: #ffe9ad;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .injury-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .injury-howto > div {
+    grid-template-columns: 1fr;
+  }
+
+  .injury-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .injury-hero {
+    padding: 12px;
+  }
+
+  .injury-hero h2 {
+    font-size: 21px;
+  }
+
+  .injury-card {
+    padding: 9px;
+  }
+
+  .injury-card-heading h3 {
+    font-size: 13px;
+  }
+}
