@@ -215,7 +215,11 @@ export default function RaceGoalsPage({ calendarTeam, setCalendarTeam }) {
       : new Date();
     return new Date(initialDate.getFullYear(), initialDate.getMonth(), 1, 12);
   });
-  const [clubTeam, setClubTeam] = useState("Hold 3");
+  const [clubTeam, setClubTeam] = useState(
+    calendarTeam === "Hold 2" || calendarTeam === "Hold 3"
+      ? calendarTeam
+      : "Hold 3",
+  );
 
   const availableDistances = useMemo(
     () =>

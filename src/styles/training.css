@@ -282,6 +282,18 @@
   color: #45d699;
 }
 
+.actual-run-button.future {
+  border-color: rgba(149, 163, 191, 0.35);
+  color: #95a3bf;
+  cursor: pointer;
+  white-space: normal;
+}
+
+.actual-activity-summary {
+  color: #95a3bf;
+  font-size: 10px;
+}
+
 .actual-run-button span,
 .actual-training-detail p {
   font-size: 11px;

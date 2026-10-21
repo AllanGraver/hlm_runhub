@@ -67,6 +67,12 @@ function formatKilometers(kilometers) {
   }).format(kilometers)} km`;
 }
 
+function formatDuration(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${String(remainingSeconds).padStart(2, "0")} min`;
+}
+
 function getDateActivities(dateKey, activities) {
   return activities.filter(
     (activity) => activity.startDateLocal?.slice(0, 10) === dateKey,
@@ -95,6 +101,37 @@ function formatPlanVolume(kilometers, minutes) {
 
 function getDateKey(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function getActivityDescription(activity) {
+  const details = [];
+  if (Number.isFinite(activity.distanceKm)) {
+    details.push(formatKilometers(activity.distanceKm));
+  }
+  if (Number.isFinite(activity.movingTime) && activity.movingTime > 0) {
+    details.push(formatDuration(activity.movingTime));
+  }
+  return details.length > 0
+    ? `${activity.name} · ${details.join(" · ")}`
+    : activity.name;
+}
+
+function getWorkoutTarget(workouts) {
+  return workouts.reduce(
+    (target, workout) => ({
+      distanceKm: target.distanceKm + (workout.distanceKm ?? 0),
+      durationMinutes: target.durationMinutes + (workout.durationMinutes ?? 0),
+    }),
+    { distanceKm: 0, durationMinutes: 0 },
+  );
+}
+
+function matchesClubTarget(workouts, clubWorkout) {
+  const ownTarget = getWorkoutTarget(workouts);
+  return (
+    Math.abs(ownTarget.distanceKm - (clubWorkout.distance ?? 0)) < 0.1 &&
+    Math.abs(ownTarget.durationMinutes - (clubWorkout.duration ?? 0)) < 1
+  );
 }
 
 function parseStoredGoal() {
@@ -462,10 +499,12 @@ export default function TrainingPage({ calendarTeam }) {
                 const isSelected = selectedDate === dateKey;
                 const actualActivities = getDateActivities(dateKey, stravaActivities);
                 const actual = getDateDistance(dateKey, stravaActivities);
+                const isFutureDate = dateKey > getDateKey(new Date());
                 const dailyOwnWorkouts =
                   planWeekIndex >= 0
                     ? ownWorkouts.filter(({ day: planDay }) => planDay === day.planDay)
                     : [];
+                const comparisonWorkout = weekWorkouts[clubTeam][dayIndex];
                 const clubWorkouts = trainingTeams.map((team) => ({
                   team,
                   workout: weekWorkouts[team][dayIndex],
@@ -473,6 +512,10 @@ export default function TrainingPage({ calendarTeam }) {
                 const hasOwnSchedule =
                   planWeekIndex >= 0 &&
                   Array.isArray(trainingData.plan.workoutsByWeek);
+                const ownPlanDiffers =
+                  hasOwnSchedule &&
+                  !matchesClubTarget(dailyOwnWorkouts, comparisonWorkout);
+                const followsClubPlan = !ownPlanDiffers;
                 return (
                   <Fragment key={dateKey}>
                     <tr
@@ -508,7 +551,11 @@ export default function TrainingPage({ calendarTeam }) {
                         </div>
                       </td>
                       <td>
-                        {hasOwnSchedule ? (
+                        {followsClubPlan ? (
+                          <span className="training-rest">
+                            Følg {clubTeam}: {describeClubWorkout(comparisonWorkout)}
+                          </span>
+                        ) : hasOwnSchedule ? (
                           dailyOwnWorkouts.length > 0 ? (
                             <div className="own-day-workouts">
                               {dailyOwnWorkouts.map((workout) => (
@@ -519,27 +566,32 @@ export default function TrainingPage({ calendarTeam }) {
                               ))}
                             </div>
                           ) : (
-                            <span className="training-rest">Hviledag</span>
+                            <span className="training-rest">
+                              Hviledag i egen plan
+                            </span>
                           )
-                        ) : trainingData.plan && planWeekIndex >= 0 ? (
-                          <span className="training-rest">
-                            Upload en plan med dagsprogram
-                          </span>
-                        ) : (
-                          <span className="training-rest">Ingen aktiv plan</span>
-                        )}
+                        ) : null}
                       </td>
                       <td>
                         <button
                           type="button"
-                          className={`actual-run-button${actual > 0 ? " recorded" : ""}`}
+                          className={`actual-run-button${actualActivities.length > 0 && !isFutureDate ? " recorded" : ""}${isFutureDate ? " future" : ""}`}
                           onClick={() => openDay(day.date)}
-                          aria-label={`${day.name}: ${actual > 0 ? `${formatKilometers(actual)} fra Strava` : "ingen Strava-aktivitet"}`}
+                          aria-label={`${day.name}: ${isFutureDate ? "træning ikke registreret endnu" : actualActivities.length > 0 ? `${formatKilometers(actual)} fra Strava` : "ingen Strava-aktivitet"}`}
                         >
-                          {actual > 0 ? (
+                          {isFutureDate ? (
+                            <span>Træning ikke registreret endnu</span>
+                          ) : actualActivities.length > 0 ? (
                             <>
                               <strong>{formatKilometers(actual)}</strong>
-                              <span>Fra Strava</span>
+                              {actualActivities.map((activity) => (
+                                <span
+                                  className="actual-activity-summary"
+                                  key={activity.id}
+                                >
+                                  {getActivityDescription(activity)}
+                                </span>
+                              ))}
                             </>
                           ) : (
                             <span>Ingen aktivitet</span>
@@ -587,11 +639,22 @@ export default function TrainingPage({ calendarTeam }) {
                               {actualActivities.length > 0 ? (
                                 actualActivities.map((activity) => (
                                   <p key={activity.id}>
-                                    <b>{activity.name}</b> · {formatKilometers(activity.distanceKm)}
+                                    <b>{activity.name}</b>
+                                    {Number.isFinite(activity.distanceKm)
+                                      ? ` · ${formatKilometers(activity.distanceKm)}`
+                                      : ""}
+                                    {Number.isFinite(activity.movingTime) &&
+                                    activity.movingTime > 0
+                                      ? ` · ${formatDuration(activity.movingTime)}`
+                                      : ""}
                                   </p>
                                 ))
                               ) : (
-                                <p>Ingen løbeaktivitet fra Strava denne dag.</p>
+                                <p>
+                                  {isFutureDate
+                                    ? "Træning ikke registreret endnu."
+                                    : "Ingen løbeaktivitet fra Strava denne dag."}
+                                </p>
                               )}
                             </div>
                           </div>
