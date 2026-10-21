@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
-import { Activity, Link2, RefreshCw, Unlink } from "lucide-react";
+import {
+  Activity,
+  ChevronDown,
+  ChevronUp,
+  Link2,
+  RefreshCw,
+  Unlink,
+} from "lucide-react";
 import "../styles/strava.css";
 
 const STRAVA_API_URL = import.meta.env.VITE_STRAVA_API_URL?.replace(/\/$/, "");
 const STRAVA_DEVICE_KEY = "hlm_runhub.strava.device.v1";
 const STRAVA_DATA_KEY = "hlm_runhub.strava.data.v1";
+const ACTIVITY_LOOKBACK_SECONDS = 90 * 24 * 60 * 60;
+const RUN_TYPES = new Set(["Run", "TrailRun", "VirtualRun", "Treadmill"]);
 
 function getDeviceId() {
   let deviceId = window.localStorage.getItem(STRAVA_DEVICE_KEY);
@@ -54,12 +63,61 @@ function formatSyncTime(value) {
   }).format(new Date(value));
 }
 
+function normalizeActivity(activity) {
+  return {
+    id: String(activity.id),
+    name: activity.name ?? "Løbetur",
+    sportType: activity.sportType ?? activity.type,
+    startDateLocal: activity.startDateLocal,
+    distanceKm:
+      activity.distanceKm ??
+      (Number.isFinite(activity.distanceMeters)
+        ? activity.distanceMeters / 1000
+        : 0),
+    movingTime: activity.movingTimeSeconds ?? 0,
+    elapsedTime: activity.elapsedTimeSeconds ?? 0,
+    elevationGain: activity.totalElevationGainMeters ?? 0,
+    averageWatts: activity.averageWatts,
+    maxWatts: activity.maxWatts,
+    averageHeartRate: activity.averageHeartRate,
+    maxHeartRate: activity.maxHeartRate,
+    averageCadence: activity.averageCadence,
+  };
+}
+
+function isRun(activity) {
+  return RUN_TYPES.has(activity.sportType) || RUN_TYPES.has(activity.type);
+}
+
+function getStreamSummary(streams) {
+  const metrics = [
+    ["heartrate", "Puls", "bpm"],
+    ["watts", "Effekt", "W"],
+    ["cadence", "Kadence", "spm"],
+  ];
+  return metrics.flatMap(([key, label, unit]) => {
+    const values = streams?.[key]?.data?.filter(Number.isFinite) ?? [];
+    if (values.length === 0) return [];
+    const average = values.reduce((total, value) => total + value, 0) / values.length;
+    const maximum = values.reduce((highest, value) => Math.max(highest, value), -Infinity);
+    return [{ label, unit, average, maximum }];
+  });
+}
+
+function formatElapsedTime(seconds) {
+  return formatDuration(Math.round(seconds ?? 0));
+}
+
 export default function StravaConnection({ onActivitiesChange }) {
   const [deviceId] = useState(getDeviceId);
   const [data, setData] = useState(readCachedData);
   const [connected, setConnected] = useState(false);
   const [loading, setLoading] = useState(Boolean(STRAVA_API_URL));
   const [error, setError] = useState("");
+  const [expandedActivityId, setExpandedActivityId] = useState("");
+  const [activityDetails, setActivityDetails] = useState({});
+  const [loadingActivityId, setLoadingActivityId] = useState("");
+  const [activityDetailErrors, setActivityDetailErrors] = useState({});
   const activities = Array.isArray(data.activities) ? data.activities : [];
 
   function saveLocalData(updates) {
@@ -81,18 +139,43 @@ export default function StravaConnection({ onActivitiesChange }) {
     return result;
   }
 
-  function applySyncResult(result) {
-    if (!Array.isArray(result.activities)) {
-      throw new Error("Workerens /api/sync skal returnere alle løbeaktiviteter for at importere træning pr. dato.");
+  async function fetchRunHubData() {
+    const athleteResult = await api("/api/runhub/athlete");
+    const after = Math.floor(Date.now() / 1000) - ACTIVITY_LOOKBACK_SECONDS;
+    const imported = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const result = await api(
+        `/api/runhub/activities?page=${page}&perPage=200&after=${after}`,
+      );
+      if (!Array.isArray(result.activities)) {
+        throw new Error("Workerens /api/runhub/activities returnerede ikke en aktivitetsliste.");
+      }
+      imported.push(...result.activities.filter(isRun).map(normalizeActivity));
+      hasMore = result.hasMore === true && result.activities.length > 0;
+      page += 1;
     }
+
+    const athlete = athleteResult.athlete;
+    const athleteName = [athlete?.firstname, athlete?.lastname]
+      .filter(Boolean)
+      .join(" ");
+    const sortedActivities = imported.sort(
+      (first, second) =>
+        new Date(second.startDateLocal).getTime() -
+        new Date(first.startDateLocal).getTime(),
+    );
     const updates = {
       connected: true,
-      athleteName: result.athleteName ?? data.athleteName ?? "Strava-konto",
+      athleteName: athleteName || data.athleteName || "Strava-konto",
       lastSync: new Date().toISOString(),
-      activities: result.activities,
+      activityApiVersion: 2,
+      activities: sortedActivities,
     };
     saveLocalData(updates);
-    onActivitiesChange(result.activities);
+    onActivitiesChange(sortedActivities);
   }
 
   useEffect(() => {
@@ -130,8 +213,12 @@ export default function StravaConnection({ onActivitiesChange }) {
           onActivitiesChange([]);
         } else {
           onActivitiesChange(activities);
-          if (justConnected || !data.lastSync) {
-            applySyncResult(await api("/api/sync"));
+          if (
+            justConnected ||
+            !data.lastSync ||
+            data.activityApiVersion !== 2
+          ) {
+            await fetchRunHubData();
           }
         }
       } catch (reason) {
@@ -151,6 +238,7 @@ export default function StravaConnection({ onActivitiesChange }) {
     if (!STRAVA_API_URL) return;
     const url = new URL(`${STRAVA_API_URL}/auth/start`);
     url.searchParams.set("device", deviceId);
+    url.searchParams.set("app", "runhub");
     window.location.assign(url.toString());
   }
 
@@ -158,7 +246,7 @@ export default function StravaConnection({ onActivitiesChange }) {
     setLoading(true);
     setError("");
     try {
-      applySyncResult(await api("/api/sync"));
+      await fetchRunHubData();
     } catch (reason) {
       setError(reason.message);
     } finally {
@@ -176,13 +264,56 @@ export default function StravaConnection({ onActivitiesChange }) {
         connected: false,
         athleteName: null,
         lastSync: null,
+        activityApiVersion: null,
         activities: [],
       });
       onActivitiesChange([]);
+      setActivityDetails({});
+      setExpandedActivityId("");
     } catch (reason) {
       setError(reason.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function toggleActivityDetails(activityId) {
+    if (expandedActivityId === activityId) {
+      setExpandedActivityId("");
+      return;
+    }
+    setExpandedActivityId(activityId);
+    if (activityDetails[activityId]) return;
+
+    setLoadingActivityId(activityId);
+    setActivityDetailErrors((current) => {
+      const next = { ...current };
+      delete next[activityId];
+      return next;
+    });
+    try {
+      const [detail, streams, laps, zones] = await Promise.all([
+        api(`/api/runhub/activity/${activityId}`),
+        api(`/api/runhub/activity/${activityId}/streams`),
+        api(`/api/runhub/activity/${activityId}/laps`),
+        api(`/api/runhub/activity/${activityId}/zones`),
+      ]);
+      setActivityDetails((current) => ({
+        ...current,
+        [activityId]: {
+          activity: detail.activity,
+          streams: streams.streams,
+          laps: laps.laps,
+          zones: zones.zones,
+        },
+      }));
+    } catch (reason) {
+      setActivityDetailErrors((current) => ({
+        ...current,
+        [activityId]: reason.message,
+      }));
+    } finally {
+      setLoadingActivityId("");
     }
   }
 
@@ -235,22 +366,44 @@ export default function StravaConnection({ onActivitiesChange }) {
           </p>
           <div className="strava-activity-list">
             {activities.map((activity) => (
-              <article className="strava-activity" key={activity.id}>
-                <div className="strava-activity-main">
-                  <strong>{activity.name}</strong>
-                  <span>{new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "short" }).format(new Date(activity.startDateLocal))}</span>
-                </div>
-                <div className="strava-activity-metrics">
-                  <strong>{formatDistance(activity.distanceKm)}</strong>
-                  <span>{formatDuration(activity.movingTime)}</span>
-                  {formatPace(activity) && <span>{formatPace(activity)}</span>}
-                  {activity.averageWatts != null && <span>{Math.round(activity.averageWatts)} W snit</span>}
-                  {activity.maxWatts != null && <span>{Math.round(activity.maxWatts)} W max</span>}
-                  {activity.averageHeartRate != null && <span>{Math.round(activity.averageHeartRate)} bpm snit</span>}
-                  {activity.maxHeartRate != null && <span>{Math.round(activity.maxHeartRate)} bpm max</span>}
-                  {activity.averageCadence != null && <span>{Math.round(activity.averageCadence)} spm</span>}
-                  {activity.elevationGain > 0 && <span>{Math.round(activity.elevationGain)} hm</span>}
-                </div>
+              <article
+                className={`strava-activity${expandedActivityId === activity.id ? " expanded" : ""}`}
+                key={activity.id}
+              >
+                <button
+                  type="button"
+                  className="strava-activity-toggle"
+                  onClick={() => toggleActivityDetails(activity.id)}
+                  aria-expanded={expandedActivityId === activity.id}
+                >
+                  <span className="strava-activity-main">
+                    <strong>{activity.name}</strong>
+                    <span>{new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "short" }).format(new Date(activity.startDateLocal))}</span>
+                  </span>
+                  <span className="strava-activity-metrics">
+                    <strong>{formatDistance(activity.distanceKm)}</strong>
+                    <span>{formatDuration(activity.movingTime)}</span>
+                    {formatPace(activity) && <span>{formatPace(activity)}</span>}
+                    {activity.averageWatts != null && <span>{Math.round(activity.averageWatts)} W snit</span>}
+                    {activity.maxWatts != null && <span>{Math.round(activity.maxWatts)} W max</span>}
+                    {activity.averageHeartRate != null && <span>{Math.round(activity.averageHeartRate)} bpm snit</span>}
+                    {activity.maxHeartRate != null && <span>{Math.round(activity.maxHeartRate)} bpm max</span>}
+                    {activity.averageCadence != null && <span>{Math.round(activity.averageCadence)} spm</span>}
+                    {activity.elevationGain > 0 && <span>{Math.round(activity.elevationGain)} hm</span>}
+                  </span>
+                  {expandedActivityId === activity.id ? (
+                    <ChevronUp size={16} aria-hidden="true" />
+                  ) : (
+                    <ChevronDown size={16} aria-hidden="true" />
+                  )}
+                </button>
+                {expandedActivityId === activity.id && (
+                  <ActivityDetail
+                    detail={activityDetails[activity.id]}
+                    error={activityDetailErrors[activity.id]}
+                    loading={loadingActivityId === activity.id}
+                  />
+                )}
               </article>
             ))}
             {activities.length === 0 && !loading && (
@@ -260,5 +413,79 @@ export default function StravaConnection({ onActivitiesChange }) {
         </>
       )}
     </section>
+  );
+}
+
+function ActivityDetail({ detail, error, loading }) {
+  if (loading) {
+    return <p className="strava-activity-detail-status">Henter detaljer fra Strava...</p>;
+  }
+  if (error) {
+    return <p className="strava-error" role="alert">{error}</p>;
+  }
+  if (!detail) return null;
+
+  const streamSummary = getStreamSummary(detail.streams);
+  const laps = Array.isArray(detail.laps) ? detail.laps : [];
+  const zones = Array.isArray(detail.zones) ? detail.zones : [];
+
+  return (
+    <div className="strava-activity-detail">
+      <h3>Aktivitetsdetaljer</h3>
+      {detail.activity.description && <p>{detail.activity.description}</p>}
+      {streamSummary.length > 0 && (
+        <div className="strava-detail-metrics">
+          {streamSummary.map(({ label, unit, average, maximum }) => (
+            <span key={label}>
+              {label}: {Math.round(average)} {unit} snit · {Math.round(maximum)} {unit} max
+            </span>
+          ))}
+        </div>
+      )}
+      {laps.length > 0 && (
+        <div className="strava-laps">
+          <h4>Intervaller og omgange</h4>
+          <div>
+            <span>Del</span><span>Distance</span><span>Tid</span><span>Tempo</span>
+          </div>
+          {laps.map((lap, index) => {
+            const distanceKm = lap.distance / 1000;
+            const pace = distanceKm > 0 ? lap.moving_time / distanceKm : null;
+            return (
+              <div key={lap.id ?? lap.lap_index ?? index}>
+                <span>{lap.name || lap.lap_index || index + 1}</span>
+                <span>{formatDistance(distanceKm)}</span>
+                <span>{formatElapsedTime(lap.moving_time)}</span>
+                <span>
+                  {pace
+                    ? `${Math.floor(pace / 60)}:${String(Math.round(pace % 60)).padStart(2, "0")} /km`
+                    : "—"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {zones.length > 0 && (
+        <div className="strava-zones">
+          <h4>Intensitetszoner</h4>
+          {zones.map((zone, zoneIndex) => (
+            <div key={zone.type ?? zoneIndex}>
+              <strong>{zone.type === "heartrate" ? "Puls" : zone.type === "power" ? "Effekt" : zone.type || "Zone"}</strong>
+              <span>
+                {zone.distribution_buckets?.map((bucket, index) => (
+                  <span key={`${zone.type}-${index}`}>
+                    Z{index + 1}: {formatElapsedTime(bucket.time)}
+                  </span>
+                ))}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+      {streamSummary.length === 0 && laps.length === 0 && zones.length === 0 && (
+        <p>Strava har ingen ekstra detaljer for denne aktivitet.</p>
+      )}
+    </div>
   );
 }

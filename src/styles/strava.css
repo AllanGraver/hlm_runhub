@@ -121,12 +121,29 @@
 }
 
 .strava-activity {
+  border-bottom: 1px solid rgba(38, 49, 77, 0.72);
+}
+
+.strava-activity-toggle {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
   padding: 11px 0;
-  border-bottom: 1px solid rgba(38, 49, 77, 0.72);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.strava-activity-toggle > svg {
+  flex: 0 0 16px;
+  color: #95a3bf;
+}
+
+.strava-activity-toggle:hover .strava-activity-main strong {
+  color: #ff8758;
 }
 
 .strava-activity-main {
@@ -162,6 +179,87 @@
   font-size: 12px;
 }
 
+.strava-activity-detail {
+  display: grid;
+  gap: 10px;
+  padding: 0 0 14px;
+  color: #95a3bf;
+  font-size: 12px;
+}
+
+.strava-activity-detail h3,
+.strava-activity-detail h4,
+.strava-activity-detail p {
+  margin: 0;
+}
+
+.strava-activity-detail h3,
+.strava-activity-detail h4 {
+  color: #dce7f5;
+  font-size: 12px;
+}
+
+.strava-activity-detail-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0 0 12px;
+  color: #95a3bf;
+  font-size: 12px;
+}
+
+.strava-detail-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.strava-detail-metrics > span,
+.strava-zones > div > span > span {
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: rgba(16, 26, 52, 0.72);
+}
+
+.strava-laps,
+.strava-zones {
+  display: grid;
+  gap: 7px;
+}
+
+.strava-laps > div,
+.strava-zones > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  align-items: center;
+}
+
+.strava-laps > div:first-of-type {
+  color: #dce7f5;
+  font-weight: 750;
+}
+
+.strava-laps > div > span:not(:first-child) {
+  text-align: right;
+}
+
+.strava-zones > div {
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+}
+
+.strava-zones > div > strong {
+  color: #dce7f5;
+  text-transform: capitalize;
+}
+
+.strava-zones > div > span {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
 @media (max-width: 600px) {
   .strava-panel {
     grid-template-columns: minmax(0, 1fr);
@@ -171,12 +269,26 @@
     justify-content: flex-start;
   }
 
-  .strava-activity {
+  .strava-activity-toggle {
     align-items: flex-start;
   }
 
   .strava-activity-metrics {
     max-width: 58%;
     gap: 4px 8px;
+  }
+
+  .strava-laps > div {
+    grid-template-columns: repeat(4, minmax(55px, 1fr));
+    font-size: 10px;
+  }
+
+  .strava-zones > div {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .strava-zones > div > span {
+    justify-content: flex-start;
   }
 }

@@ -20,4 +20,4 @@ GitHub Actions tester og bygger appen og udgiver den automatisk til GitHub Pages
 
 Forbindelsesknappen findes øverst på siden **Træning**. GitHub Actions bruger repository-variablen `VITE_STRAVA_API_URL` til Cloudflare Workerens base-URL. Workerens `FRONTEND_URL` skal tillade `https://allangraver.github.io`. Strava-adgangskoder og OAuth-tokens skal kun ligge i Workerens hemmeligheder — ikke i frontend eller repository.
 
-Workerens `/api/sync` skal returnere en `activities`-liste for at importere træning pr. dato. Den nuværende Worker returnerer kun samlede statistikker, så login kan forbindes, men aktivitetsimport pr. dato kræver en udvidelse af Workerens svar.
+RunHub bruger Workerens `/api/runhub/athlete` og paginerede `/api/runhub/activities`-endpoints til at hente løbeture fra de seneste 90 dage. OAuth-start kaldes med `app=runhub`. Aktivitetsdetaljer, streams, omgange og zoner hentes først, når en løbetur åbnes, via `/api/runhub/activity/:id`, `/streams`, `/laps` og `/zones`. Workerens `/api/status` og `/api/disconnect` bruges fortsat til forbindelsesstatus og afbrydelse.
