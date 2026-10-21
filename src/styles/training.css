@@ -183,6 +183,23 @@
   border-bottom-color: rgba(25, 213, 238, 0.45);
 }
 
+.training-day-row.today th,
+.training-day-row.today td {
+  border-top-color: rgba(25, 213, 238, 0.72);
+  border-bottom-color: rgba(25, 213, 238, 0.72);
+  background: rgba(25, 213, 238, 0.09);
+}
+
+.training-day-row.today th {
+  border-left: 1px solid rgba(25, 213, 238, 0.72);
+  border-radius: 9px 0 0 9px;
+}
+
+.training-day-row.today td:last-child {
+  border-right: 1px solid rgba(25, 213, 238, 0.72);
+  border-radius: 0 9px 9px 0;
+}
+
 .training-day-button {
   display: grid;
   width: 100%;
@@ -192,6 +209,27 @@
   background: transparent;
   color: #dce7f5;
   text-align: left;
+}
+
+.training-day-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.training-day-row.today .training-day-button strong {
+  color: #19d5ee;
+}
+
+.training-today-label {
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #19d5ee;
+  color: #07101d;
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 
 .training-day-button small {
@@ -632,6 +670,11 @@
     border: 1px solid #26314d;
     border-radius: 12px;
     background: rgba(5, 8, 23, 0.28);
+  }
+
+  .team-training-table tbody tr.training-day-row.today {
+    border-color: #19d5ee;
+    background: rgba(25, 213, 238, 0.1);
   }
 
   .team-training-table tbody tr.training-day-row th {

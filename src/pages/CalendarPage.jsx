@@ -114,12 +114,16 @@ export default function CalendarPage({ team, openWorkout }) {
                           : undefined
                       }
                       disabled={!hasWorkout}
+                      aria-current={isToday ? "date" : undefined}
                       aria-label={`${dateLabel.format(date)}, ${workout.name}${workout.distance ? `, ${workout.distance} km` : ""}${workout.duration ? `, ${workout.duration} minutter` : ""}`}
                     >
                       <span className="calendar-weekday-label" aria-hidden="true">
                         {weekdays[(date.getDay() + 6) % 7]}
                       </span>
                       <time dateTime={localDate}>{dateLabel.format(date)}</time>
+                      {isToday && (
+                        <span className="calendar-today-label">I dag</span>
+                      )}
                       {workout.zone && (
                         <span
                           className={`zone-symbol zone-${workout.zone.toLowerCase()}`}

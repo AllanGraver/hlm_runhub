@@ -285,6 +285,7 @@ export default function TrainingPage({ calendarTeam }) {
   const [selectedDate, setSelectedDate] = useState("");
   const [stravaActivities, setStravaActivities] = useState([]);
 
+  const todayDateKey = getDateKey(new Date());
   const weekEnd = shiftDate(weekStart, 6);
   const weekDates = weekdays.map((day) => ({
     ...day,
@@ -497,6 +498,7 @@ export default function TrainingPage({ calendarTeam }) {
               {weekDates.map((day, dayIndex) => {
                 const dateKey = getDateKey(day.date);
                 const isSelected = selectedDate === dateKey;
+                const isToday = dateKey === todayDateKey;
                 const actualActivities = getDateActivities(dateKey, stravaActivities);
                 const actual = getDateDistance(dateKey, stravaActivities);
                 const isFutureDate = dateKey > getDateKey(new Date());
@@ -519,16 +521,22 @@ export default function TrainingPage({ calendarTeam }) {
                 return (
                   <Fragment key={dateKey}>
                     <tr
-                      className={`training-day-row${isSelected ? " selected" : ""}`}
+                      className={`training-day-row${isSelected ? " selected" : ""}${isToday ? " today" : ""}`}
                     >
                       <th scope="row">
                         <button
                           type="button"
                           className="training-day-button"
                           aria-expanded={isSelected}
+                          aria-current={isToday ? "date" : undefined}
                           onClick={() => openDay(day.date)}
                         >
-                          <strong>{day.name}</strong>
+                          <span className="training-day-heading">
+                            <strong>{day.name}</strong>
+                            {isToday && (
+                              <span className="training-today-label">I dag</span>
+                            )}
+                          </span>
                           <small>{formatDate(day.date)}</small>
                         </button>
                       </th>
