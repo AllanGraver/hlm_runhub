@@ -1,5 +1,7 @@
 # RunHub v4.3.3 Complete
 
+[▶ Åbn RunHub](https://allangraver.github.io/hlm_runhub/)
+
 Samlet Vite/React-app med ExcelParserV2 til HLM-matrixen.
 
 ## Lokalt
@@ -17,4 +19,4 @@ Repository secrets:
 - `RUSHFILES_URL`
 - `RUSHFILES_CODE`
 
-Vælg GitHub Actions som Pages source. Workflowet synkroniserer Excel, tester, bygger og deployer.
+GitHub Actions tester og bygger appen og udgiver den automatisk til GitHub Pages ved push til `main`. Vælg **GitHub Actions** som Pages source under **Settings → Pages**.
