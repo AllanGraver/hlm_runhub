@@ -114,6 +114,7 @@ export default function StravaConnection({ onActivitiesChange }) {
   const [connected, setConnected] = useState(false);
   const [loading, setLoading] = useState(Boolean(STRAVA_API_URL));
   const [error, setError] = useState("");
+  const [activityCacheVisible, setActivityCacheVisible] = useState(true);
   const [expandedActivityId, setExpandedActivityId] = useState("");
   const [activityDetails, setActivityDetails] = useState({});
   const [loadingActivityId, setLoadingActivityId] = useState("");
@@ -364,52 +365,75 @@ export default function StravaConnection({ onActivitiesChange }) {
           <p className="strava-data-note">
             Aktivitetscache gemmes kun i denne browser. Stryd-effekt vises, når Strava returnerer effektdata.
           </p>
-          <div className="strava-activity-list">
-            {activities.map((activity) => (
-              <article
-                className={`strava-activity${expandedActivityId === activity.id ? " expanded" : ""}`}
-                key={activity.id}
-              >
-                <button
-                  type="button"
-                  className="strava-activity-toggle"
-                  onClick={() => toggleActivityDetails(activity.id)}
-                  aria-expanded={expandedActivityId === activity.id}
-                >
-                  <span className="strava-activity-main">
-                    <strong>{activity.name}</strong>
-                    <span>{new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "short" }).format(new Date(activity.startDateLocal))}</span>
-                  </span>
-                  <span className="strava-activity-metrics">
-                    <strong>{formatDistance(activity.distanceKm)}</strong>
-                    <span>{formatDuration(activity.movingTime)}</span>
-                    {formatPace(activity) && <span>{formatPace(activity)}</span>}
-                    {activity.averageWatts != null && <span>{Math.round(activity.averageWatts)} W snit</span>}
-                    {activity.maxWatts != null && <span>{Math.round(activity.maxWatts)} W max</span>}
-                    {activity.averageHeartRate != null && <span>{Math.round(activity.averageHeartRate)} bpm snit</span>}
-                    {activity.maxHeartRate != null && <span>{Math.round(activity.maxHeartRate)} bpm max</span>}
-                    {activity.averageCadence != null && <span>{Math.round(activity.averageCadence)} spm</span>}
-                    {activity.elevationGain > 0 && <span>{Math.round(activity.elevationGain)} hm</span>}
-                  </span>
-                  {expandedActivityId === activity.id ? (
-                    <ChevronUp size={16} aria-hidden="true" />
-                  ) : (
-                    <ChevronDown size={16} aria-hidden="true" />
-                  )}
-                </button>
-                {expandedActivityId === activity.id && (
-                  <ActivityDetail
-                    detail={activityDetails[activity.id]}
-                    error={activityDetailErrors[activity.id]}
-                    loading={loadingActivityId === activity.id}
-                  />
-                )}
-              </article>
-            ))}
-            {activities.length === 0 && !loading && (
-              <p className="strava-loading">Ingen importerede løbeture. Synkronisér for at hente aktiviteter.</p>
-            )}
+          <div className="strava-cache-controls">
+            <strong>Aktivitetscache · {activities.length}</strong>
+            <button
+              type="button"
+              className="strava-cache-toggle"
+              aria-expanded={activityCacheVisible}
+              onClick={() => setActivityCacheVisible((visible) => !visible)}
+            >
+              {activityCacheVisible ? (
+                <>
+                  <ChevronUp size={16} aria-hidden="true" />
+                  Skjul aktiviteter
+                </>
+              ) : (
+                <>
+                  <ChevronDown size={16} aria-hidden="true" />
+                  Vis aktiviteter
+                </>
+              )}
+            </button>
           </div>
+          {activityCacheVisible && (
+            <div className="strava-activity-list">
+              {activities.map((activity) => (
+                <article
+                  className={`strava-activity${expandedActivityId === activity.id ? " expanded" : ""}`}
+                  key={activity.id}
+                >
+                  <button
+                    type="button"
+                    className="strava-activity-toggle"
+                    onClick={() => toggleActivityDetails(activity.id)}
+                    aria-expanded={expandedActivityId === activity.id}
+                  >
+                    <span className="strava-activity-main">
+                      <strong>{activity.name}</strong>
+                      <span>{new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "short" }).format(new Date(activity.startDateLocal))}</span>
+                    </span>
+                    <span className="strava-activity-metrics">
+                      <strong>{formatDistance(activity.distanceKm)}</strong>
+                      <span>{formatDuration(activity.movingTime)}</span>
+                      {formatPace(activity) && <span>{formatPace(activity)}</span>}
+                      {activity.averageWatts != null && <span>{Math.round(activity.averageWatts)} W snit</span>}
+                      {activity.maxWatts != null && <span>{Math.round(activity.maxWatts)} W max</span>}
+                      {activity.averageHeartRate != null && <span>{Math.round(activity.averageHeartRate)} bpm snit</span>}
+                      {activity.maxHeartRate != null && <span>{Math.round(activity.maxHeartRate)} bpm max</span>}
+                      {activity.averageCadence != null && <span>{Math.round(activity.averageCadence)} spm</span>}
+                      {activity.elevationGain > 0 && <span>{Math.round(activity.elevationGain)} hm</span>}
+                    </span>
+                    {expandedActivityId === activity.id ? (
+                      <ChevronUp size={16} aria-hidden="true" />
+                    ) : (
+                      <ChevronDown size={16} aria-hidden="true" />
+                    )}
+                  </button>
+                  {expandedActivityId === activity.id && (
+                    <ActivityDetail
+                      detail={activityDetails[activity.id]}
+                      error={activityDetailErrors[activity.id]}
+                      loading={loadingActivityId === activity.id}
+                    />
+                  )}
+                </article>
+              ))}
+              {activities.length === 0 && !loading && (
+                <p className="strava-loading">Ingen importerede løbeture. Synkronisér for at hente aktiviteter.</p>
+              )}
+            </div>
+          )}
         </>
       )}
     </section>
