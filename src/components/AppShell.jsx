@@ -1,5 +1,6 @@
 import {
   Activity,
+  Bot,
   BookOpen,
   CalendarDays,
   Calculator,
@@ -19,6 +20,7 @@ const nav = [
   ["performance", "Performance", Activity],
   ["guides", "Guides", Calculator],
   ["tools", "Værktøjer", BookOpen],
+  ["coach", "AI Coach", Bot],
 ];
 export default function AppShell({
   page,

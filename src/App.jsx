@@ -7,6 +7,7 @@ import RaceCenterPage from "./pages/RaceCenterPage";
 import PerformancePage from "./pages/PerformancePage";
 import GuidesPage from "./pages/GuidesPage";
 import ToolsPage from "./pages/ToolsPage";
+import CoachPage from "./pages/CoachPage";
 import { RaceProvider } from "./context/RaceContext";
 
 function loadVdot() {
@@ -57,6 +58,8 @@ export default function App() {
       <PerformancePage vdot={vdot} setVdot={saveVdot} />
     ) : page === "guides" ? (
       <GuidesPage />
+    ) : page === "coach" ? (
+      <CoachPage setPage={setPage} />
     ) : (
       <ToolsPage />
     );

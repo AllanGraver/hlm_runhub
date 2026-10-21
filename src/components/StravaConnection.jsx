@@ -8,21 +8,14 @@ import {
   Unlink,
 } from "lucide-react";
 import "../styles/strava.css";
-
-const STRAVA_API_URL = import.meta.env.VITE_STRAVA_API_URL?.replace(/\/$/, "");
-const STRAVA_DEVICE_KEY = "hlm_runhub.strava.device.v1";
+import {
+  getStravaDeviceId,
+  STRAVA_API_URL,
+  stravaApi,
+} from "../services/stravaClient";
 const STRAVA_DATA_KEY = "hlm_runhub.strava.data.v1";
 const ACTIVITY_LOOKBACK_SECONDS = 90 * 24 * 60 * 60;
 const RUN_TYPES = new Set(["Run", "TrailRun", "VirtualRun", "Treadmill"]);
-
-function getDeviceId() {
-  let deviceId = window.localStorage.getItem(STRAVA_DEVICE_KEY);
-  if (!deviceId) {
-    deviceId = window.crypto.randomUUID();
-    window.localStorage.setItem(STRAVA_DEVICE_KEY, deviceId);
-  }
-  return deviceId;
-}
 
 function readCachedData() {
   try {
@@ -109,7 +102,7 @@ function formatElapsedTime(seconds) {
 }
 
 export default function StravaConnection({ onActivitiesChange }) {
-  const [deviceId] = useState(getDeviceId);
+  const [deviceId] = useState(getStravaDeviceId);
   const [data, setData] = useState(readCachedData);
   const [connected, setConnected] = useState(false);
   const [loading, setLoading] = useState(Boolean(STRAVA_API_URL));
@@ -132,12 +125,7 @@ export default function StravaConnection({ onActivitiesChange }) {
   }
 
   async function api(path, options = {}) {
-    const headers = new Headers(options.headers);
-    headers.set("X-Device-ID", deviceId);
-    const response = await fetch(`${STRAVA_API_URL}${path}`, { ...options, headers });
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(result.error ?? "Strava-forbindelsen fejlede.");
-    return result;
+    return stravaApi(deviceId, path, options);
   }
 
   async function fetchRunHubData() {
