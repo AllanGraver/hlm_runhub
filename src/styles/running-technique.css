@@ -1,0 +1,216 @@
+.running-technique-guide {
+  --tech-ink: #142018;
+  --tech-muted: #607066;
+  --tech-line: #dce6df;
+  --tech-soft: #f4f8f5;
+  --tech-green: #176b45;
+  --tech-green-dark: #0d4f32;
+  --tech-yellow: #b97800;
+  --tech-red: #a93b32;
+  display: grid;
+  gap: 26px;
+}
+
+.technique-school-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.35fr);
+  gap: 26px;
+  align-items: end;
+}
+
+.technique-hero-rule {
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 14px;
+  background: rgba(255,255,255,.09);
+  display: grid;
+  gap: 5px;
+}
+
+.technique-hero-rule strong { font-size: 1rem; }
+.technique-hero-rule span { opacity: .82; line-height: 1.45; }
+
+.technique-navigation {
+  position: sticky;
+  top: 10px;
+  z-index: 8;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--tech-line);
+  border-radius: 16px;
+  background: color-mix(in srgb, #fff 94%, transparent);
+  box-shadow: 0 12px 30px rgba(20, 32, 24, .08);
+  backdrop-filter: blur(12px);
+}
+
+.technique-navigation-label { display: grid; min-width: 130px; }
+.technique-navigation-label small { color: var(--tech-muted); font-size: .68rem; font-weight: 800; letter-spacing: .1em; }
+.technique-navigation-label strong { color: var(--tech-ink); }
+.technique-phase-links { display: grid; grid-template-columns: repeat(6, minmax(92px, 1fr)); gap: 8px; }
+.technique-phase-links button {
+  min-width: 0;
+  border: 1px solid var(--tech-line);
+  border-radius: 11px;
+  background: #fff;
+  color: var(--tech-ink);
+  padding: 10px 8px;
+  font: inherit;
+  font-size: .79rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: .18s ease;
+}
+.technique-phase-links button span { display: block; color: var(--tech-green); font-size: .65rem; letter-spacing: .08em; margin-bottom: 2px; }
+.technique-phase-links button:hover,
+.technique-phase-links button:focus-visible { border-color: var(--tech-green); transform: translateY(-1px); outline: none; }
+
+.technique-level-filter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  padding: 22px;
+  background: var(--tech-soft);
+  border: 1px solid var(--tech-line);
+  border-radius: 18px;
+}
+.technique-level-filter small { color: var(--tech-green); font-weight: 850; letter-spacing: .1em; }
+.technique-level-filter h2 { margin: 4px 0 5px; color: var(--tech-ink); }
+.technique-level-filter p { margin: 0; color: var(--tech-muted); max-width: 760px; }
+.technique-level-buttons { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.technique-level-buttons button {
+  border: 1px solid var(--tech-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--tech-ink);
+  padding: 9px 14px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.technique-level-buttons button.active { color: #fff; border-color: transparent; }
+.technique-level-buttons button.all.active { background: var(--tech-ink); }
+.technique-level-buttons button.beginner.active { background: var(--tech-green); }
+.technique-level-buttons button.intermediate.active { background: var(--tech-yellow); }
+.technique-level-buttons button.advanced.active { background: var(--tech-red); }
+.technique-level-buttons button:focus-visible { outline: 3px solid rgba(23, 107, 69, .24); outline-offset: 2px; }
+
+.technique-phase-list { display: grid; gap: 34px; }
+.technique-phase { scroll-margin-top: 105px; display: grid; gap: 18px; }
+.technique-phase-heading {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(210px, .38fr);
+  gap: 18px;
+  align-items: center;
+  padding: 22px;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(125deg, var(--tech-green-dark), var(--tech-green));
+}
+.technique-phase-heading > span {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.14);
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+.technique-phase-heading small { font-weight: 850; letter-spacing: .1em; opacity: .72; }
+.technique-phase-heading h2 { margin: 2px 0 6px; color: #fff; }
+.technique-phase-heading p { margin: 0; line-height: 1.55; opacity: .9; }
+.technique-phase-heading aside { border-left: 1px solid rgba(255,255,255,.25); padding-left: 18px; }
+.technique-phase-heading aside strong { display: block; margin-bottom: 4px; }
+
+.running-technique-guide .technique-drill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+.running-technique-guide .technique-drill-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--tech-line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 7px 20px rgba(20,32,24,.045);
+}
+.running-technique-guide .technique-drill-heading { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.running-technique-guide .technique-drill-heading small { color: var(--tech-muted); font-weight: 850; letter-spacing: .08em; }
+.running-technique-guide .technique-drill-heading h3 { margin: 3px 0 0; color: var(--tech-ink); }
+.running-technique-guide .technique-level { flex: 0 0 auto; border-radius: 999px; padding: 5px 9px; font-size: .7rem; font-weight: 850; }
+.running-technique-guide .technique-level.beginner { color: var(--tech-green-dark); background: #e1f3e9; }
+.running-technique-guide .technique-level.intermediate { color: #805000; background: #fff0c9; }
+.running-technique-guide .technique-level.advanced { color: #8b2d26; background: #fbe0dc; }
+.running-technique-guide .technique-purpose { display: grid; gap: 3px; margin: 16px 0 14px; padding: 12px; border-radius: 11px; background: var(--tech-soft); }
+.running-technique-guide .technique-purpose strong { color: var(--tech-green-dark); font-size: .75rem; text-transform: uppercase; letter-spacing: .07em; }
+.running-technique-guide .technique-purpose span { color: var(--tech-ink); line-height: 1.45; }
+.technique-drill-copy h4 { margin: 0 0 5px; color: var(--tech-ink); font-size: .83rem; }
+.technique-drill-copy p { margin: 0; color: var(--tech-muted); line-height: 1.55; }
+.technique-drill-details { display: grid; gap: 10px; margin: 15px 0; }
+.technique-drill-details div { border-top: 1px solid var(--tech-line); padding-top: 10px; }
+.technique-drill-details dt { color: var(--tech-ink); font-size: .75rem; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; }
+.technique-drill-details dd { margin: 3px 0 0; color: var(--tech-muted); line-height: 1.45; }
+.running-technique-guide .technique-dosage { margin-top: auto; }
+
+.technique-session {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(320px, 1.2fr);
+  gap: 28px;
+  padding: 26px;
+  border-radius: 20px;
+  color: #fff;
+  background: #142018;
+}
+.technique-session small { color: #9bd1b1; font-weight: 850; letter-spacing: .1em; }
+.technique-session h2 { color: #fff; margin: 5px 0 8px; }
+.technique-session p { color: rgba(255,255,255,.72); line-height: 1.55; }
+.technique-session ol { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 0; margin: 0; }
+.technique-session li { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 11px; background: rgba(255,255,255,.07); }
+.technique-session li > span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: #fff; background: var(--tech-green); font-size: .7rem; font-weight: 900; }
+.technique-session li div { display: grid; }
+.technique-session li strong { font-size: .88rem; }
+.technique-session li small { color: rgba(255,255,255,.55); font-size: .68rem; letter-spacing: .03em; }
+
+@media (max-width: 1050px) {
+  .technique-navigation { position: static; grid-template-columns: 1fr; }
+  .technique-phase-links { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .running-technique-guide .technique-drill-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .technique-school-hero,
+  .technique-level-filter,
+  .technique-phase-heading,
+  .technique-session { grid-template-columns: 1fr; }
+  .technique-phase-heading aside { border-left: 0; border-top: 1px solid rgba(255,255,255,.25); padding: 14px 0 0; }
+  .technique-level-buttons { justify-content: flex-start; }
+  .running-technique-guide .technique-drill-grid { grid-template-columns: 1fr; }
+  .technique-session ol { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .technique-phase-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .technique-level-buttons button { flex: 1 1 calc(50% - 8px); }
+  .technique-phase-heading { padding: 18px; }
+  .technique-phase-heading > span { width: 44px; height: 44px; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .running-technique-guide {
+    --tech-ink: #edf5ef;
+    --tech-muted: #aebbb2;
+    --tech-line: #34443a;
+    --tech-soft: #1b2920;
+  }
+  .technique-navigation,
+  .technique-phase-links button,
+  .technique-level-buttons button,
+  .running-technique-guide .technique-drill-card { background: #152119; }
+}
