@@ -1012,10 +1012,10 @@ function RunningTechniqueGuide() {
 export default function ToolsPage() {
   const [activeTool, setActiveTool] = useState("technique");
   const tools = [
-    ["technique", "Løbeteknik"],
-    ["injury", "Skadeforebyggelse"],
     ["warmup", "Opvarmning"],
+    ["technique", "Løbeteknik"],
     ["strength", "Styrketræning"],
+    ["injury", "Skadeforebyggelse"], 
     ["checklist", "Tjekliste"],
     ["zones", "Zoneforklaring"],
   ];
