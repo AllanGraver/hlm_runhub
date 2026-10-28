@@ -85,7 +85,7 @@ const checklistGroups = [
     id: "finish",
     number: "05",
     shortTitle: "Efter mål",
-    title: "Efter målgang",
+    title: "Efter målstregen",
     note: "Gør det nemt at få tørt tøj, væske og det praktiske på plads.",
     items: [
       { id: "warm-after", label: "Varmt lag og rent skiftetøj", priority: "optional", races: ["10 km", "Halvmaraton", "Maraton"] },
