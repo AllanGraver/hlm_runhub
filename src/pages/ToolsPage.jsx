@@ -181,7 +181,7 @@ const techniquePhases = [
     drills: [
       {
         name: "Strakte ben",
-        level: "Øvet",
+        level: "Begynder",
         purpose: "Fremhæver aktiv nedføring og det bagudrettede træk gennem underlaget.",
         instructions:
           "Løb med næsten strakte ben. Før benet frem fra hoften, sæt foden aktivt ned tæt på kroppen, og træk underlaget bagud.",
@@ -191,7 +191,7 @@ const techniquePhases = [
       },
       {
         name: "B-Skip",
-        level: "Avanceret",
+        level: "Øvet",
         purpose: "Kombinerer knæløft, kontrolleret benstræk og aktivt bagudtræk.",
         instructions:
           "Start som A-Skip. Stræk underbenet kontrolleret frem, før foden ned, og træk den bagud mod underlaget.",
@@ -263,7 +263,7 @@ const techniquePhases = [
     drills: [
       {
         name: "Gadedrengehop",
-        level: "Øvet",
+        level: "Begynder",
         purpose: "Træner rytmisk afsæt, knæfremføring og samspil mellem arme og ben.",
         instructions:
           "Lav kraftige, rytmiske skip. Pres jorden væk med standbenet, før modsatte knæ frem, og brug armene aktivt.",
