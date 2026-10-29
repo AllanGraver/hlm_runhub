@@ -1,20 +1,9 @@
 import { useMemo, useState } from "react";
 import {
-  Check,
-  Cloud,
-  CloudDrizzle,
-  CloudRain,
-  CloudSun,
-  Clock3,
-  Droplets,
-  LocateFixed,
-  MapPin,
-  Search,
-  Shirt,
-  Sun,
-  Thermometer,
-  Wind,
+  Check, Cloud, CloudDrizzle, CloudRain, CloudSun, Clock3, Droplets,
+  LocateFixed, MapPin, Search, Shirt, Sun, Thermometer, Wind,
 } from "lucide-react";
+import "../styles/weather-guide.css";
 
 const weatherDescriptions = {
   0: ["Klart", Sun], 1: ["Næsten klart", Sun], 2: ["Letskyet", CloudSun],
@@ -26,148 +15,29 @@ const weatherDescriptions = {
   66: ["Underafkølet regn", CloudRain], 67: ["Kraftig underafkølet regn", CloudRain],
   71: ["Let sne", Cloud], 73: ["Sne", Cloud], 75: ["Kraftig sne", Cloud],
   77: ["Snekorn", Cloud], 80: ["Regnbyger", CloudRain], 81: ["Byger", CloudRain],
-  82: ["Kraftige byger", CloudRain], 85: ["Snebyger", Cloud],
-  86: ["Kraftige snebyger", Cloud], 95: ["Tordenvejr", CloudRain],
-  96: ["Torden og hagl", CloudRain], 99: ["Kraftigt tordenvejr", CloudRain],
+  82: ["Kraftige byger", CloudRain], 85: ["Snebyger", Cloud], 86: ["Kraftige snebyger", Cloud],
+  95: ["Tordenvejr", CloudRain], 96: ["Torden og hagl", CloudRain], 99: ["Kraftigt tordenvejr", CloudRain],
 };
 
 const workoutTypes = ["Rolig tur", "Lang tur", "Tempo", "Intervaller", "Løb"];
-const temperaturePreferences = [
-  ["cold", "Fryser let"], ["normal", "Normal"], ["warm", "Får hurtigt varmt"],
-];
+const temperaturePreferences = [["cold", "Fryser let"], ["normal", "Normal"], ["warm", "Får hurtigt varmt"]];
 const durations = [30, 45, 60, 90, 120];
 
-function describeWeather(code) {
-  return weatherDescriptions[code] ?? ["Ukendt vejr", Cloud];
-}
-
-function isRain(code) {
-  return (code >= 51 && code <= 67) || (code >= 80 && code <= 82);
-}
-function isSnow(code) {
-  return (code >= 71 && code <= 77) || (code >= 85 && code <= 86);
-}
-function isThunder(code) { return code >= 95; }
-
-function getRunningOutfit({
-  apparentTemperature,
-  windSpeed,
-  rainProbability,
-  uvIndex,
-  weatherCode,
-  workoutType,
-  temperaturePreference,
-  duration,
-}) {
-  const personalAdjustment = { cold: -3, normal: 0, warm: 3 }[temperaturePreference] ?? 0;
-  const workoutAdjustment = {
-    "Rolig tur": 0, "Lang tur": 1, Tempo: 2, Intervaller: 3, Løb: 3,
-  }[workoutType] ?? 0;
-  const clothingTemperature = apparentTemperature + personalAdjustment + workoutAdjustment;
-  const rainy = rainProbability >= 50 || isRain(weatherCode);
-  const snowy = isSnow(weatherCode);
-  const windy = windSpeed >= 20;
-  const veryWindy = windSpeed >= 30;
-
-  let title = "Mildt løbevejr";
-  let comfort = "Gode forhold";
-  let head = "Intet nødvendigt";
-  let upperBody = "Kortærmet teknisk T-shirt";
-  let lowerBody = "Shorts";
-  let hands = "Intet nødvendigt";
-  let feet = "Tekniske løbestrømper og velafprøvede sko";
-  let baseLayer = "Kortærmet teknisk T-shirt";
-  let warmLayer = "Ikke nødvendigt";
-
-  if (clothingTemperature >= 25) {
-    title = "Varmt løbevejr";
-    head = "Kasket eller visor";
-    upperBody = "Let singlet eller meget let T-shirt";
-    lowerBody = "Lette shorts";
-    comfort = "Varmt";
-  } else if (clothingTemperature >= 18) {
-    title = "Lunt løbevejr";
-    head = uvIndex >= 3 ? "Kasket eller visor efter behov" : "Intet nødvendigt";
-    upperBody = "Kortærmet teknisk T-shirt";
-    lowerBody = "Shorts";
-  } else if (clothingTemperature >= 12) {
-    title = "Mildt løbevejr";
-    upperBody = "Kortærmet T-shirt eller tynd langærmet trøje";
-    lowerBody = "Shorts eller lette tights";
-    baseLayer = "Kortærmet teknisk T-shirt";
-  } else if (clothingTemperature >= 7) {
-    title = "Køligt løbevejr";
-    head = "Tyndt pandebånd efter behov";
-    upperBody = "Tynd langærmet teknisk trøje";
-    lowerBody = "Lette lange tights";
-    hands = "Tynde handsker efter behov";
-    baseLayer = "Tynd langærmet teknisk trøje";
-  } else if (clothingTemperature >= 1) {
-    title = "Koldt løbevejr";
-    head = "Pandebånd eller tynd hue";
-    upperBody = "Svedtransporterende baselayer og let mellemlag";
-    lowerBody = "Lange tights";
-    hands = "Tynde løbehandsker";
-    baseLayer = "Svedtransporterende baselayer";
-    warmLayer = "Let isolerende mellemlag";
-    comfort = "Kræver tilpasning";
-  } else {
-    title = "Meget koldt løbevejr";
-    head = "Varm hue eller pandebånd og halsedisse";
-    upperBody = "Baselayer og isolerende mellemlag";
-    lowerBody = "Varme eller vindtætte tights";
-    hands = "Varme løbehandsker";
-    feet = "Varme løbestrømper og sko med godt greb";
-    baseLayer = "Varmt svedtransporterende baselayer";
-    warmLayer = "Isolerende mellemlag";
-    comfort = "Kræver ekstra omtanke";
-  }
-
-  let protectionLayer = "Ikke nødvendigt";
-  if (veryWindy) protectionLayer = "Let vindjakke";
-  else if (windy) protectionLayer = "Let vindvest eller vindafvisende front";
-  if (rainy) protectionLayer = clothingTemperature <= 7 ? "Let vandafvisende løbejakke" : "Meget let regnskal efter behov";
-  if (snowy) protectionLayer = "Vind- og vandafvisende yderlag";
-
-  const reasons = [
-    { label: "Temperatur", text: `Føles som ${Math.round(apparentTemperature)} °C. Din personlige og træningsmæssige justering giver en påklædningstemperatur omkring ${Math.round(clothingTemperature)} °C.` },
-    { label: "Vind", text: veryWindy ? `${Math.round(windSpeed)} km/t gør et vindafvisende yderlag vigtigt.` : windy ? `${Math.round(windSpeed)} km/t gør let vindbeskyttelse relevant.` : `${Math.round(windSpeed)} km/t kræver normalt ikke et særligt vindlag.` },
-    { label: "Regn", text: rainy ? `${Math.round(rainProbability)} % regnrisiko eller regn i prognosen. Vælg hurtigttørrende materialer og let beskyttelse.` : `${Math.round(rainProbability)} % regnrisiko. Ekstra regnbeskyttelse er normalt ikke nødvendig.` },
-    { label: "Din træning", text: ["Tempo", "Intervaller", "Løb"].includes(workoutType) ? `${workoutType} giver høj varmeproduktion, så outfittet er justeret lettere.` : `${workoutType} giver moderat varmeproduktion.` },
-  ];
-
-  const protection = [];
-  if (windy) protection.push("Vindbeskyttelse");
-  if (rainy) protection.push("Regnbeskyttelse");
-  if (uvIndex >= 3) protection.push("Solbeskyttelse");
-  if (snowy) protection.push("Sko med godt greb");
-
-  let alert = "Du må gerne være lidt kølig de første minutter. Justér lagene, hvis du hurtigt bliver varm.";
-  if (duration >= 90) alert = "På en længere tur er justerbare lag vigtigere, fordi forholdene kan ændre sig undervejs.";
-  if (isThunder(weatherCode)) {
-    comfort = "Udsæt turen";
-    alert = "Der er torden i prognosen. Udsæt turen eller vælg en sikker indendørs løsning.";
-  }
-
-  return {
-    title, comfort, head, upperBody, lowerBody, hands, feet,
-    baseLayer, warmLayer, protectionLayer, protection, reasons, alert,
-    clothingTemperature,
-  };
-}
-
-function formatHour(time) { return time.slice(11, 16); }
-function formatUpdateTime(time) {
-  return new Intl.DateTimeFormat("da-DK", { hour: "2-digit", minute: "2-digit" }).format(new Date(time));
-}
-function getLocationLabel(location) {
-  return [location.name, location.admin1, location.country]
-    .filter((part, index, parts) => part && parts.indexOf(part) === index).join(", ");
-}
-function timeToMinutes(time) {
+const describeWeather = (code) => weatherDescriptions[code] ?? ["Ukendt vejr", Cloud];
+const isRain = (code) => (code >= 51 && code <= 67) || (code >= 80 && code <= 82);
+const isSnow = (code) => (code >= 71 && code <= 77) || (code >= 85 && code <= 86);
+const isThunder = (code) => code >= 95;
+const formatHour = (time) => time.slice(11, 16);
+const timeToMinutes = (time) => {
   const [hours, minutes] = time.split(":").map(Number);
   return hours * 60 + minutes;
-}
+};
+const formatUpdateTime = (time) => new Intl.DateTimeFormat("da-DK", {
+  hour: "2-digit", minute: "2-digit",
+}).format(new Date(time));
+const getLocationLabel = (location) => [location?.name, location?.admin1, location?.country]
+  .filter((part, index, parts) => part && parts.indexOf(part) === index).join(", ");
+
 function getRunWindow(hourly, startTime, duration) {
   if (!hourly.length) return [];
   const start = timeToMinutes(startTime);
@@ -177,6 +47,57 @@ function getRunWindow(hourly, startTime, duration) {
     const adjusted = minute < start - 720 ? minute + 1440 : minute;
     return adjusted >= start && adjusted <= end;
   });
+}
+
+function getRunningOutfit({ apparentTemperature, windSpeed, rainProbability, uvIndex, weatherCode, workoutType, temperaturePreference, duration }) {
+  const personalAdjustment = { cold: -3, normal: 0, warm: 3 }[temperaturePreference] ?? 0;
+  const workoutAdjustment = { "Rolig tur": 0, "Lang tur": 1, Tempo: 2, Intervaller: 3, Løb: 3 }[workoutType] ?? 0;
+  const clothingTemperature = apparentTemperature + personalAdjustment + workoutAdjustment;
+  const rainy = rainProbability >= 50 || isRain(weatherCode);
+  const snowy = isSnow(weatherCode);
+  const windy = windSpeed >= 20;
+  const veryWindy = windSpeed >= 30;
+
+  let outfit = {
+    title: "Mildt løbevejr", comfort: "Gode forhold", head: "Intet nødvendigt",
+    upperBody: "Kortærmet teknisk T-shirt", lowerBody: "Shorts", hands: "Intet nødvendigt",
+    feet: "Tekniske løbestrømper og velafprøvede sko", baseLayer: "Kortærmet teknisk T-shirt",
+    warmLayer: "Ikke nødvendigt",
+  };
+
+  if (clothingTemperature >= 25) outfit = { ...outfit, title: "Varmt løbevejr", comfort: "Varmt", head: "Kasket eller visor", upperBody: "Let singlet eller meget let T-shirt", lowerBody: "Lette shorts" };
+  else if (clothingTemperature >= 18) outfit = { ...outfit, title: "Lunt løbevejr", head: uvIndex >= 3 ? "Kasket eller visor efter behov" : "Intet nødvendigt" };
+  else if (clothingTemperature >= 12) outfit = { ...outfit, upperBody: "Kortærmet T-shirt eller tynd langærmet trøje", lowerBody: "Shorts eller lette tights" };
+  else if (clothingTemperature >= 7) outfit = { ...outfit, title: "Køligt løbevejr", head: "Tyndt pandebånd efter behov", upperBody: "Tynd langærmet teknisk trøje", lowerBody: "Lette lange tights", hands: "Tynde handsker efter behov", baseLayer: "Tynd langærmet teknisk trøje" };
+  else if (clothingTemperature >= 1) outfit = { ...outfit, title: "Koldt løbevejr", comfort: "Kræver tilpasning", head: "Pandebånd eller tynd hue", upperBody: "Svedtransporterende baselayer og let mellemlag", lowerBody: "Lange tights", hands: "Tynde løbehandsker", baseLayer: "Svedtransporterende baselayer", warmLayer: "Let isolerende mellemlag" };
+  else outfit = { ...outfit, title: "Meget koldt løbevejr", comfort: "Kræver ekstra omtanke", head: "Varm hue eller pandebånd og halsedisse", upperBody: "Baselayer og isolerende mellemlag", lowerBody: "Varme eller vindtætte tights", hands: "Varme løbehandsker", feet: "Varme løbestrømper og sko med godt greb", baseLayer: "Varmt svedtransporterende baselayer", warmLayer: "Isolerende mellemlag" };
+
+  let protectionLayer = veryWindy ? "Let vindjakke" : windy ? "Let vindvest eller vindafvisende front" : "Ikke nødvendigt";
+  if (rainy) protectionLayer = clothingTemperature <= 7 ? "Let vandafvisende løbejakke" : "Meget let regnskal efter behov";
+  if (snowy) protectionLayer = "Vind- og vandafvisende yderlag";
+
+  const protection = [];
+  if (windy) protection.push("Vindbeskyttelse");
+  if (rainy) protection.push("Regnbeskyttelse");
+  if (uvIndex >= 3) protection.push("Solbeskyttelse");
+  if (snowy) protection.push("Sko med godt greb");
+
+  const reasons = [
+    { label: "Temperatur", text: `Føles som ${Math.round(apparentTemperature)} °C. Personlig præference og træning giver en påklædningstemperatur omkring ${Math.round(clothingTemperature)} °C.` },
+    { label: "Vind", text: veryWindy ? `${Math.round(windSpeed)} km/t gør et vindafvisende yderlag vigtigt.` : windy ? `${Math.round(windSpeed)} km/t gør let vindbeskyttelse relevant.` : `${Math.round(windSpeed)} km/t kræver normalt ikke et særligt vindlag.` },
+    { label: "Regn", text: rainy ? `${Math.round(rainProbability)} % regnrisiko eller regn i prognosen. Vælg hurtigttørrende materialer.` : `${Math.round(rainProbability)} % regnrisiko. Ekstra regnbeskyttelse er normalt ikke nødvendig.` },
+    { label: "Din træning", text: ["Tempo", "Intervaller", "Løb"].includes(workoutType) ? `${workoutType} giver høj varmeproduktion, så outfittet er justeret lettere.` : `${workoutType} giver moderat varmeproduktion.` },
+  ];
+
+  let alert = duration >= 90
+    ? "På en længere tur er justerbare lag vigtigere, fordi forholdene kan ændre sig undervejs."
+    : "Du må gerne være lidt kølig de første minutter. Justér lagene, hvis du hurtigt bliver varm.";
+  if (isThunder(weatherCode)) {
+    outfit.comfort = "Udsæt turen";
+    alert = "Der er torden i prognosen. Udsæt turen eller vælg en sikker indendørs løsning.";
+  }
+
+  return { ...outfit, protectionLayer, protection, reasons, alert, clothingTemperature };
 }
 
 async function fetchWeather(location) {
@@ -204,11 +125,8 @@ async function fetchWeather(location) {
       windSpeed: data.hourly.wind_speed_10m[index],
     };
   });
-
   return {
-    current: data.current,
-    hourly,
-    uvIndex: data.daily.uv_index_max?.[0] ?? 0,
+    current: data.current, hourly, uvIndex: data.daily.uv_index_max?.[0] ?? 0,
     currentPrecipitationProbability: data.hourly.precipitation_probability[currentHourIndex] ?? 0,
   };
 }
@@ -290,10 +208,8 @@ export default function WeatherGuide() {
 
   const advice = runWeather ? getRunningOutfit({
     apparentTemperature: runWeather.apparentTemperature + outfitShift,
-    windSpeed: runWeather.windSpeed,
-    rainProbability: runWeather.rainProbability,
-    uvIndex: weather.uvIndex,
-    weatherCode: runWeather.weatherCode,
+    windSpeed: runWeather.windSpeed, rainProbability: runWeather.rainProbability,
+    uvIndex: weather.uvIndex, weatherCode: runWeather.weatherCode,
     workoutType, temperaturePreference, duration,
   }) : null;
 
@@ -304,7 +220,7 @@ export default function WeatherGuide() {
     <div className="weather-guide">
       <div className="tools-intro">
         <section><small>DIT OUTFIT ER HOVEDSVARET</small><h2>Hvad skal jeg løbe i?</h2></section>
-        <section><small>HVAD KAN JEG BRUGE DET TIL?</small><p>Få en personlig anbefaling baseret på vejret under selve turen, træningstype, varighed og hvor varmt du normalt får det.</p></section>
+        <section><small>HVAD KAN JEG BRUGE DET TIL?</small><p>Få en personlig anbefaling baseret på vejret under turen, træningstype, varighed og hvor varmt du normalt får det.</p></section>
       </div>
 
       <section className="weather-toolbar">
@@ -329,44 +245,29 @@ export default function WeatherGuide() {
         <div className="weather-preference"><span>Hvordan oplever du temperaturen?</span><div>{temperaturePreferences.map(([value, label]) => <button type="button" key={value} className={temperaturePreference === value ? "active" : ""} onClick={() => setTemperaturePreference(value)}>{label}</button>)}</div></div>
       </section>
 
-      {weather && advice ? (
-        <>
-          <section className="weather-outfit-summary">
-            <div className="weather-outfit-heading"><div><small>ANBEFALET TIL DIN TUR</small><h2>{advice.title} · {workoutType.toLowerCase()}</h2><p>{getLocationLabel(location)} · {startTime}–{endTime}</p></div><span className={advice.comfort === "Udsæt turen" ? "danger" : ""}>{advice.comfort}</span></div>
-            <div className="weather-outfit-grid">
-              {[["Hoved", advice.head], ["Overkrop", advice.upperBody], ["Ben", advice.lowerBody], ["Hænder", advice.hands], ["Fødder", advice.feet]].map(([area, item]) => <article key={area}><small>{area}</small><strong>{item}</strong></article>)}
-            </div>
-            <div className="weather-outfit-adjust"><span>Hvordan lyder anbefalingen?</span><div><button type="button" onClick={() => setOutfitShift((value) => Math.max(-6, value - 2))}>🥶 For koldt</button><button type="button" className={outfitShift === 0 ? "active" : ""} onClick={() => setOutfitShift(0)}><Check size={13} /> Passer</button><button type="button" onClick={() => setOutfitShift((value) => Math.min(6, value + 2))}>🥵 For varmt</button></div></div>
+      {weather && advice ? <>
+        <section className="weather-outfit-summary">
+          <div className="weather-outfit-heading"><div><small>ANBEFALET TIL DIN TUR</small><h2>{advice.title} · {workoutType.toLowerCase()}</h2><p>{getLocationLabel(location)} · {startTime}–{endTime}</p></div><span className={advice.comfort === "Udsæt turen" ? "danger" : ""}>{advice.comfort}</span></div>
+          <div className="weather-outfit-grid">{[["Hoved", advice.head], ["Overkrop", advice.upperBody], ["Ben", advice.lowerBody], ["Hænder", advice.hands], ["Fødder", advice.feet]].map(([area, item]) => <article key={area}><small>{area}</small><strong>{item}</strong></article>)}</div>
+          <div className="weather-outfit-adjust"><span>Hvordan lyder anbefalingen?</span><div><button type="button" onClick={() => setOutfitShift((value) => Math.max(-6, value - 2))}>🥶 For koldt</button><button type="button" className={outfitShift === 0 ? "active" : ""} onClick={() => setOutfitShift(0)}><Check size={13} /> Passer</button><button type="button" onClick={() => setOutfitShift((value) => Math.min(6, value + 2))}>🥵 For varmt</button></div></div>
+        </section>
+
+        <div className="weather-main-grid">
+          <section className="weather-clothing-card">
+            <small><Shirt size={14} /> LAG-PÅ-LAG</small><h2>Varme og beskyttelse</h2>
+            <div className="weather-layer-list"><article><small>LAG 1 · BASIS</small><strong>{advice.baseLayer}</strong></article><article><small>LAG 2 · VARME</small><strong>{advice.warmLayer}</strong></article><article><small>LAG 3 · BESKYTTELSE</small><strong>{advice.protectionLayer}</strong></article></div>
+            {advice.protection.length > 0 && <p className="weather-advice-note">Ekstra fokus: {advice.protection.join(" · ")}</p>}
+            <p className="weather-avoid"><strong>Praktisk råd:</strong> {advice.alert}</p>
           </section>
+          <section className="weather-reason-card"><small>HVORFOR DETTE OUTFIT?</small><h2>Sådan påvirker forholdene valget</h2><div className="weather-reason-list">{advice.reasons.map((reason) => <article key={reason.label}><strong>{reason.label}</strong><p>{reason.text}</p></article>)}</div></section>
+        </div>
 
-          <div className="weather-main-grid">
-            <section className="weather-clothing-card">
-              <small><Shirt size={14} /> LAG-PÅ-LAG</small><h2>Varme og beskyttelse</h2>
-              <div className="weather-layer-list"><article><small>LAG 1 · BASIS</small><strong>{advice.baseLayer}</strong></article><article><small>LAG 2 · VARME</small><strong>{advice.warmLayer}</strong></article><article><small>LAG 3 · BESKYTTELSE</small><strong>{advice.protectionLayer}</strong></article></div>
-              {advice.protection.length > 0 && <p className="weather-advice-note">Ekstra fokus: {advice.protection.join(" · ")}</p>}
-              <p className="weather-avoid"><strong>Praktisk råd:</strong> {advice.alert}</p>
-            </section>
-
-            <section className="weather-reason-card">
-              <small>HVORFOR DETTE OUTFIT?</small><h2>Sådan påvirker forholdene valget</h2>
-              <div className="weather-reason-list">{advice.reasons.map((reason) => <article key={reason.label}><strong>{reason.label}</strong><p>{reason.text}</p></article>)}</div>
-            </section>
-          </div>
-
-          <section className="weather-run-window">
-            <div className="weather-hourly-heading"><div><small>VEJRET UNDER DIN TUR</small><h2>{startTime}–{endTime}</h2></div><span>{runWindow.length || 1} prognosepunkter</span></div>
-            <div className="weather-run-window-stats">
-              <article><small>Temperatur</small><strong>{Math.round(runWeather.minTemperature)}–{Math.round(runWeather.maxTemperature)} °C</strong></article>
-              <article><small>Føles som, lavest</small><strong>{Math.round(runWeather.apparentTemperature)} °C</strong></article>
-              <article><small>Maks. vind</small><strong>{Math.round(runWeather.windSpeed)} km/t</strong></article>
-              <article><small>Maks. regnrisiko</small><strong>{Math.round(runWeather.rainProbability)} %</strong></article>
-            </div>
-            <div className="weather-hourly-list">{weather.hourly.slice(0, 8).map((hour) => { const [, HourIcon] = describeWeather(hour.weatherCode); const selected = runWindow.some((item) => item.time === hour.time); return <article className={selected ? "is-selected" : ""} key={hour.time}><small>{formatHour(hour.time)}</small><HourIcon size={17} /><strong>{Math.round(hour.temperature)}°</strong><span>{hour.precipitationProbability}% regn</span><span>{Math.round(hour.windSpeed)} km/t</span></article>; })}</div>
-          </section>
-        </>
-      ) : (
-        <section className="weather-empty-state"><CloudSun size={34} /><h2>Find vejret og få dit outfit</h2><p>Søg efter en by eller brug din aktuelle placering. Vælg derefter træningstype, starttid og varighed.</p></section>
-      )}
+        <section className="weather-run-window">
+          <div className="weather-hourly-heading"><div><small>VEJRET UNDER DIN TUR</small><h2>{startTime}–{endTime}</h2></div><span>{runWindow.length || 1} prognosepunkter</span></div>
+          <div className="weather-run-window-stats"><article><small>Temperatur</small><strong>{Math.round(runWeather.minTemperature)}–{Math.round(runWeather.maxTemperature)} °C</strong></article><article><small>Føles som, lavest</small><strong>{Math.round(runWeather.apparentTemperature)} °C</strong></article><article><small>Maks. vind</small><strong>{Math.round(runWeather.windSpeed)} km/t</strong></article><article><small>Maks. regnrisiko</small><strong>{Math.round(runWeather.rainProbability)} %</strong></article></div>
+          <div className="weather-hourly-list">{weather.hourly.slice(0, 8).map((hour) => { const [, HourIcon] = describeWeather(hour.weatherCode); const selected = runWindow.some((item) => item.time === hour.time); return <article className={selected ? "is-selected" : ""} key={hour.time}><small>{formatHour(hour.time)}</small><HourIcon size={17} /><strong>{Math.round(hour.temperature)}°</strong><span>{hour.precipitationProbability}% regn</span><span>{Math.round(hour.windSpeed)} km/t</span></article>; })}</div>
+        </section>
+      </> : <section className="weather-empty-state"><CloudSun size={34} /><h2>Find vejret og få dit outfit</h2><p>Søg efter en by eller brug din aktuelle placering. Vælg derefter træningstype, starttid og varighed.</p></section>}
 
       {weather && <div className="weather-secondary-grid"><section className="weather-overview-card"><h2>Aktuelt vejr</h2><div><span><Thermometer size={14} /> Temperatur</span><strong>{Math.round(weather.current.temperature_2m)} °C</strong></div><div><span><Droplets size={14} /> Luftfugtighed</span><strong>{weather.current.relative_humidity_2m}%</strong></div><div><span><Wind size={14} /> Vind</span><strong>{Math.round(weather.current.wind_speed_10m)} km/t</strong></div><div><span><Sun size={14} /> UV-indeks</span><strong>{weather.uvIndex}</strong></div><div><span><Clock3 size={14} /> Opdateret</span><strong>{formatUpdateTime(weather.current.time)}</strong></div></section></div>}
 
