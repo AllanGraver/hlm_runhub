@@ -14,7 +14,9 @@ import {
   stravaApi,
 } from "../services/stravaClient";
 const STRAVA_DATA_KEY = "hlm_runhub.strava.data.v1";
-const ACTIVITY_LOOKBACK_SECONDS = 90 * 24 * 60 * 60;
+const INITIAL_LOOKBACK_SECONDS = 365 * 24 * 60 * 60;
+const SYNC_OVERLAP_SECONDS = 7 * 24 * 60 * 60;
+const ACTIVITY_API_VERSION = 3;
 const RUN_TYPES = new Set(["Run", "TrailRun", "VirtualRun", "Treadmill"]);
 
 function readCachedData() {
@@ -107,7 +109,7 @@ export default function StravaConnection({ onActivitiesChange }) {
   const [connected, setConnected] = useState(false);
   const [loading, setLoading] = useState(Boolean(STRAVA_API_URL));
   const [error, setError] = useState("");
-  const [activityCacheVisible, setActivityCacheVisible] = useState(false);
+  const [activityCacheVisible, setActivityCacheVisible] = useState(true);
   const [expandedActivityId, setExpandedActivityId] = useState("");
   const [activityDetails, setActivityDetails] = useState({});
   const [loadingActivityId, setLoadingActivityId] = useState("");
@@ -128,9 +130,16 @@ export default function StravaConnection({ onActivitiesChange }) {
     return stravaApi(deviceId, path, options);
   }
 
-  async function fetchRunHubData() {
+  async function fetchRunHubData({ fullImport = false } = {}) {
     const athleteResult = await api("/api/runhub/athlete");
-    const after = Math.floor(Date.now() / 1000) - ACTIVITY_LOOKBACK_SECONDS;
+    const existingActivities = Array.isArray(data.activities)
+      ? data.activities
+      : [];
+    const lookbackSeconds =
+      fullImport || existingActivities.length === 0
+        ? INITIAL_LOOKBACK_SECONDS
+        : SYNC_OVERLAP_SECONDS;
+    const after = Math.floor(Date.now() / 1000) - lookbackSeconds;
     const imported = [];
     let page = 1;
     let hasMore = true;
@@ -140,7 +149,9 @@ export default function StravaConnection({ onActivitiesChange }) {
         `/api/runhub/activities?page=${page}&perPage=200&after=${after}`,
       );
       if (!Array.isArray(result.activities)) {
-        throw new Error("Workerens /api/runhub/activities returnerede ikke en aktivitetsliste.");
+        throw new Error(
+          "Workerens /api/runhub/activities returnerede ikke en aktivitetsliste.",
+        );
       }
       imported.push(...result.activities.filter(isRun).map(normalizeActivity));
       hasMore = result.hasMore === true && result.activities.length > 0;
@@ -151,7 +162,15 @@ export default function StravaConnection({ onActivitiesChange }) {
     const athleteName = [athlete?.firstname, athlete?.lastname]
       .filter(Boolean)
       .join(" ");
-    const sortedActivities = imported.sort(
+
+    const activityMap = new Map(
+      existingActivities.map((activity) => [String(activity.id), activity]),
+    );
+    imported.forEach((activity) => {
+      activityMap.set(String(activity.id), activity);
+    });
+
+    const sortedActivities = [...activityMap.values()].sort(
       (first, second) =>
         new Date(second.startDateLocal).getTime() -
         new Date(first.startDateLocal).getTime(),
@@ -160,7 +179,7 @@ export default function StravaConnection({ onActivitiesChange }) {
       connected: true,
       athleteName: athleteName || data.athleteName || "Strava-konto",
       lastSync: new Date().toISOString(),
-      activityApiVersion: 2,
+      activityApiVersion: ACTIVITY_API_VERSION,
       activities: sortedActivities,
     };
     saveLocalData(updates);
@@ -205,9 +224,9 @@ export default function StravaConnection({ onActivitiesChange }) {
           if (
             justConnected ||
             !data.lastSync ||
-            data.activityApiVersion !== 2
+            data.activityApiVersion !== ACTIVITY_API_VERSION
           ) {
-            await fetchRunHubData();
+            await fetchRunHubData({ fullImport: true });
           }
         }
       } catch (reason) {
@@ -307,97 +326,54 @@ export default function StravaConnection({ onActivitiesChange }) {
   }
 
   return (
-    <section
-      className={`strava-panel${connected ? " is-connected" : ""}`}
-      aria-label="Strava-forbindelse"
-    >
-      <div className="strava-compact-header">
-        <div className="strava-heading">
-          <div className="strava-mark" aria-hidden="true">
-            <Activity size={18} />
-          </div>
-
-          <div className="strava-heading-content">
-            <div className="strava-title-row">
-              <h2>Strava</h2>
-              <span className={`strava-status${connected ? " connected" : ""}`}>
-                {loading ? "Opdaterer" : connected ? "Forbundet" : "Ikke forbundet"}
-              </span>
-            </div>
-
-            <p>
-              {connected
-                ? `${data.athleteName ?? "Strava-konto"}${
-                    data.lastSync
-                      ? ` · Synkroniseret ${formatSyncTime(data.lastSync)}`
-                      : " · Ikke synkroniseret"
-                  }`
-                : "Forbind Strava for automatisk at hente dine løbeaktiviteter"}
-            </p>
-          </div>
+    <section className="strava-panel" aria-label="Strava-forbindelse">
+      <div className="strava-heading">
+        <div className="strava-mark" aria-hidden="true"><Activity size={20} /></div>
+        <div>
+          <h2>Strava</h2>
+          <p>
+            {connected
+              ? `Forbundet som ${data.athleteName ?? "din Strava-konto"}`
+              : "Importér dine løbeaktiviteter"}
+          </p>
         </div>
+      </div>
 
-        <div className="strava-actions">
-          {connected ? (
-            <>
-              <button
-                type="button"
-                className="strava-button strava-sync-button"
-                onClick={sync}
-                disabled={loading}
-              >
-                <RefreshCw
-                  size={15}
-                  className={loading ? "is-spinning" : ""}
-                  aria-hidden="true"
-                />
-                {loading ? "Synkroniserer..." : "Synkroniser"}
-              </button>
-
-              <button
-                type="button"
-                className="strava-icon-button"
-                onClick={disconnect}
-                disabled={loading}
-                aria-label="Afbryd Strava og fjern lokal cache"
-                title="Afbryd Strava"
-              >
-                <Unlink size={15} aria-hidden="true" />
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className="strava-button"
-              onClick={connect}
-              disabled={loading || !STRAVA_API_URL}
-            >
-              <Link2 size={15} aria-hidden="true" />
-              Forbind Strava
+      <div className="strava-actions">
+        {connected ? (
+          <>
+            <button type="button" className="strava-button" onClick={sync} disabled={loading}>
+              <RefreshCw size={16} /> {loading ? "Synkroniserer..." : "Synkronisér"}
             </button>
-          )}
-        </div>
+            <button type="button" className="strava-icon-button" onClick={disconnect} disabled={loading} aria-label="Afbryd Strava og fjern lokal cache" title="Afbryd Strava">
+              <Unlink size={16} />
+            </button>
+          </>
+        ) : (
+          <button type="button" className="strava-button" onClick={connect} disabled={loading || !STRAVA_API_URL}>
+            <Link2 size={16} /> Forbind Strava
+          </button>
+        )}
       </div>
 
       {!STRAVA_API_URL && (
         <p className="strava-setup-note">
-          Worker-adresse mangler. Sæt <code>VITE_STRAVA_API_URL</code> til din
-          Cloudflare Worker.
+          Worker-adresse mangler. Sæt <code>VITE_STRAVA_API_URL</code> til din Cloudflare Worker.
         </p>
       )}
-
-      {error && (
-        <p className="strava-error" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <p className="strava-error" role="alert">{error}</p>}
 
       {connected && (
         <>
+          <div className="strava-sync-row">
+            <span>Sidst synkroniseret</span>
+            <strong>{data.lastSync ? formatSyncTime(data.lastSync) : "Aldrig"}</strong>
+          </div>
+          <p className="strava-data-note">
+            Aktivitetscache gemmes kun i denne browser. Stryd-effekt vises, når Strava returnerer effektdata.
+          </p>
           <div className="strava-cache-controls">
-            <span className="strava-cache-summary">
-              {activities.length} importerede løbeture
-            </span>
+            <strong>Aktivitetscache · {activities.length}</strong>
             <button
               type="button"
               className="strava-cache-toggle"
@@ -407,7 +383,7 @@ export default function StravaConnection({ onActivitiesChange }) {
               {activityCacheVisible ? (
                 <>
                   <ChevronUp size={16} aria-hidden="true" />
-                  Skjul
+                  Skjul aktiviteter
                 </>
               ) : (
                 <>
@@ -417,7 +393,6 @@ export default function StravaConnection({ onActivitiesChange }) {
               )}
             </button>
           </div>
-
           {activityCacheVisible && (
             <div className="strava-activity-list">
               {activities.map((activity) => (
@@ -433,35 +408,18 @@ export default function StravaConnection({ onActivitiesChange }) {
                   >
                     <span className="strava-activity-main">
                       <strong>{activity.name}</strong>
-                      <span>
-                        {new Intl.DateTimeFormat("da-DK", {
-                          day: "numeric",
-                          month: "short",
-                        }).format(new Date(activity.startDateLocal))}
-                      </span>
+                      <span>{new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "short" }).format(new Date(activity.startDateLocal))}</span>
                     </span>
                     <span className="strava-activity-metrics">
                       <strong>{formatDistance(activity.distanceKm)}</strong>
                       <span>{formatDuration(activity.movingTime)}</span>
                       {formatPace(activity) && <span>{formatPace(activity)}</span>}
-                      {activity.averageWatts != null && (
-                        <span>{Math.round(activity.averageWatts)} W snit</span>
-                      )}
-                      {activity.maxWatts != null && (
-                        <span>{Math.round(activity.maxWatts)} W max</span>
-                      )}
-                      {activity.averageHeartRate != null && (
-                        <span>{Math.round(activity.averageHeartRate)} bpm snit</span>
-                      )}
-                      {activity.maxHeartRate != null && (
-                        <span>{Math.round(activity.maxHeartRate)} bpm max</span>
-                      )}
-                      {activity.averageCadence != null && (
-                        <span>{Math.round(activity.averageCadence)} spm</span>
-                      )}
-                      {activity.elevationGain > 0 && (
-                        <span>{Math.round(activity.elevationGain)} hm</span>
-                      )}
+                      {activity.averageWatts != null && <span>{Math.round(activity.averageWatts)} W snit</span>}
+                      {activity.maxWatts != null && <span>{Math.round(activity.maxWatts)} W max</span>}
+                      {activity.averageHeartRate != null && <span>{Math.round(activity.averageHeartRate)} bpm snit</span>}
+                      {activity.maxHeartRate != null && <span>{Math.round(activity.maxHeartRate)} bpm max</span>}
+                      {activity.averageCadence != null && <span>{Math.round(activity.averageCadence)} spm</span>}
+                      {activity.elevationGain > 0 && <span>{Math.round(activity.elevationGain)} hm</span>}
                     </span>
                     {expandedActivityId === activity.id ? (
                       <ChevronUp size={16} aria-hidden="true" />
@@ -469,7 +427,6 @@ export default function StravaConnection({ onActivitiesChange }) {
                       <ChevronDown size={16} aria-hidden="true" />
                     )}
                   </button>
-
                   {expandedActivityId === activity.id && (
                     <ActivityDetail
                       detail={activityDetails[activity.id]}
@@ -479,11 +436,8 @@ export default function StravaConnection({ onActivitiesChange }) {
                   )}
                 </article>
               ))}
-
               {activities.length === 0 && !loading && (
-                <p className="strava-loading">
-                  Ingen importerede løbeture. Synkroniser for at hente aktiviteter.
-                </p>
+                <p className="strava-loading">Ingen importerede løbeture. Synkronisér for at hente aktiviteter.</p>
               )}
             </div>
           )}
