@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Activity,
   Bot,
@@ -6,7 +6,6 @@ import {
   ChevronUp,
   Gauge,
   HeartPulse,
-  RefreshCw,
   Sparkles,
   Target,
   TrendingUp,
@@ -448,9 +447,14 @@ export default function CoachPage({ setPage }) {
     chartView === "load" ? week.trainingLoad : chartView === "intensity" ? week.hardKm + week.moderateKm : week.distanceKm,
   ));
 
+  useEffect(() => {
+    refreshInputs();
+  }, []);
+
   function refreshInputs() {
     try {
-      setInputState({ inputs: getCoachInputs(), error: "" });
+      const latest = getCoachInputs();
+      setInputState({ inputs: latest, error: "" });
       setAnalysis("");
       setRequestError("");
     } catch (error) {
@@ -462,10 +466,12 @@ export default function CoachPage({ setPage }) {
     setRequestError("");
     setAnalysis("");
     try {
+      const latestInputs = getCoachInputs();
+      setInputState({ inputs: latestInputs, error: "" });
       const result = await stravaApi(deviceId, "/api/runhub/coach", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(createCoachPayload(inputs, readiness, intent)),
+        body: JSON.stringify(createCoachPayload(latestInputs, readiness, intent)),
       });
       if (typeof result.analysis !== "string" || !result.analysis.trim()) {
         throw new Error("AI-coachen returnerede ikke en analyse.");
@@ -494,7 +500,7 @@ export default function CoachPage({ setPage }) {
   return (
     <>
       <style>{`
-        .coach-page-compact{display:grid;gap:7px}.coach-page-compact .coach-compact-card{padding:10px 12px}.coach-compact-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:7px}.coach-compact-recommendation{display:grid;grid-template-columns:1fr auto;gap:10px;border-color:rgba(255,211,77,.38)}.coach-compact-focus,.coach-compact-stats,.coach-compact-goal,.coach-compact-signals,.coach-compact-checkin,.coach-compact-performance{display:grid;gap:5px}.coach-compact-focus{grid-template-columns:repeat(3,1fr);margin-top:7px}.coach-compact-stats{grid-template-columns:repeat(4,1fr);margin-top:7px}.coach-compact-goal{grid-template-columns:1fr 1fr;margin-top:7px}.coach-compact-signals{grid-template-columns:repeat(2,1fr);margin-top:7px}.coach-compact-checkin{grid-template-columns:repeat(3,1fr);margin-top:7px}.coach-compact-performance{grid-template-columns:repeat(4,1fr);margin-top:7px}.coach-mini{padding:7px;border:1px solid #293a5e;border-radius:8px;background:rgba(4,9,23,.3)}.coach-mini small{display:block;color:#19d5ee;font-size:7px;font-weight:900}.coach-mini strong{display:block;margin-top:3px;font-size:11px}.coach-mini span{display:block;margin-top:2px;color:#93a5c5;font-size:7px;line-height:1.35}.coach-progress{height:6px;margin-top:7px;overflow:hidden;border-radius:99px;background:#202d49}.coach-progress i{display:block;height:100%;background:linear-gradient(90deg,#19d5ee,#45d699)}.coach-intensity{display:grid;height:7px;margin-top:6px;overflow:hidden;border-radius:99px}.coach-vdot-row{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:5px;align-items:stretch;margin-top:7px}.coach-vdot-arrow{display:grid;place-items:center;color:#667897}.coach-vdot-guide{margin-top:6px;padding:8px;border:1px solid rgba(255,211,77,.3);border-radius:8px;background:rgba(255,211,77,.05);font-size:8px;line-height:1.45}.coach-vdot-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:5px}.coach-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px}.coach-vdot-detail{margin-top:6px}.coach-vdot-activity{display:grid;grid-template-columns:68px 58px 58px 1fr;gap:6px;padding:5px 2px;border-bottom:1px solid #293a5e;font-size:7px}.coach-vdot-activity.is-excluded{opacity:.5}.coach-choices{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap}.coach-choices button,.coach-chart-tabs button,.coach-questions button,.coach-toggle{padding:5px 7px;border:1px solid #344767;border-radius:7px;background:#101a30;color:#b9c5d9;font-size:7px;cursor:pointer}.coach-choices button.active,.coach-chart-tabs button.active{border-color:#19d5ee;color:#7eeaf6}.coach-chart-tabs{display:flex;gap:4px}.coach-chart{display:flex;height:95px;align-items:flex-end;gap:7px;margin-top:6px;border-bottom:1px solid #304160}.coach-chart-col{display:grid;flex:1;justify-items:center;gap:2px;font-size:6px}.coach-chart-bar{width:min(20px,80%);min-height:3px;border-radius:4px 4px 0 0;background:linear-gradient(#2bd8ed,#087e9d)}.coach-questions{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:7px}.coach-analysis-output{margin-top:7px;padding:8px;border:1px solid rgba(25,213,238,.28);border-radius:8px;background:rgba(25,213,238,.04);white-space:pre-wrap}.coach-privacy-compact{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 10px}.coach-privacy-copy{font-size:8px;color:#93a5c5}.coach-heading-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.coach-small-copy{margin:3px 0 0;color:#93a5c5;font-size:8px;line-height:1.4}.coach-status-pill{padding:4px 7px;border:1px solid rgba(255,211,77,.3);border-radius:99px;color:#ffe38a;font-size:7px;font-weight:900;white-space:nowrap}@media(max-width:820px){.coach-compact-grid{grid-template-columns:1fr}.coach-vdot-row{grid-template-columns:1fr}.coach-vdot-arrow{transform:rotate(90deg)}.coach-compact-recommendation{grid-template-columns:1fr}}@media(max-width:560px){.coach-compact-focus,.coach-compact-stats,.coach-compact-goal,.coach-compact-signals,.coach-compact-checkin,.coach-compact-performance,.coach-vdot-actions,.coach-questions{grid-template-columns:1fr 1fr}.coach-vdot-activity{grid-template-columns:55px 45px 50px 1fr}}
+        .coach-page-compact{display:grid;gap:7px}.coach-page-compact .coach-compact-card{padding:10px 12px}.coach-compact-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:7px}.coach-compa
       `}</style>
 
       <div className="coach-page-compact">
@@ -506,9 +512,6 @@ export default function CoachPage({ setPage }) {
 
         <Card className="coach-privacy-compact">
           <span className="coach-privacy-copy">🔒 Privat analyse · GPS, aktivitetsnavne og Strava-ID'er sendes ikke</span>
-          <button type="button" className="coach-refresh" onClick={refreshInputs} aria-label="Genindlæs træningsdata">
-            <RefreshCw size={15} />
-          </button>
         </Card>
 
         {inputError && <p className="coach-error" role="alert">{inputError}</p>}
@@ -540,7 +543,7 @@ export default function CoachPage({ setPage }) {
             <div className="coach-compact-stats">
               <div className="coach-mini"><small>PLANLAGT</small><strong>{plannedKm ?? "–"} km</strong><span>Program</span></div>
               <div className="coach-mini"><small>GENNEMFØRT</small><strong>{completedKm} km</strong><span>{latestWeek?.runCount ?? 0} pas</span></div>
-              <div className="coach-mini"><small>AF PLANEN</small><strong>{completion !== null ? `${completion}%` : "–"}</strong><span>{plannedKm ? `${Math.max(0, round(plannedKm - completedKm, 1))} km tilbage` : "Ingen aktiv plan"}</span></div>
+              <div className="coach-mini"><small>AF PLANEN</small><strong>{completion !== null ? `${completion}%` : "–"}</strong><span>{plannedKm ? `${Math.max(0, round(plannedKm - completedKm,1) ?? 0)} km tilbage` : "–"}</span></div>
               <div className="coach-mini"><small>LANG TUR</small><strong>{latestWeek?.longestRunKm ?? 0} km</strong><span>Denne uge</span></div>
             </div>
             <div className="coach-progress"><i style={{ width: `${Math.min(100, Math.max(0, completion ?? 0))}%` }} /></div>
@@ -557,9 +560,9 @@ export default function CoachPage({ setPage }) {
           <Card className="coach-compact-card">
             <small>VEJEN MOD DIT MÅL</small>
             <h3>{inputs.goal ? `${inputs.goal.distanceKm} km · ${LEVEL_LABELS[inputs.goal.level]}` : "Intet race-mål valgt"}</h3>
-            <p className="coach-small-copy">{inputs.goal ? new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "long", year: "numeric" }).format(inputs.goal.raceDate) : "Vælg mål i Race Center"}</p>
+            <p className="coach-small-copy">{inputs.goal ? new Intl.DateTimeFormat("da-DK", { day: "numeric", month: "long", year: "numeric" }).format(inputs.goal.raceDate) : "Vælg mål i Race Coach"}</p>
             <div className="coach-compact-goal">
-              <div className="coach-mini"><small>PROGRAM</small><strong>{inputs.plan?.name ?? "Ingen plan"}</strong><span>{inputs.planWeekIndex >= 0 ? `Uge ${inputs.planWeekIndex + 1}` : "Ikke aktiv"}</span></div>
+              <div className="coach-mini"><small>PROGRAM</small><strong>{inputs.plan?.name ?? "Ingen plan"}</strong><span>{inputs.planWeekIndex >= 0 ? `Uge ${inputs.planWeekIndex + 1}` : "Ikke aktuel"}</span></div>
               <div className="coach-mini"><small>NÆSTE UGE</small><strong>{inputs.plan?.weeklyKilometers?.[inputs.planWeekIndex + 1] ?? "–"} km</strong><span>Planlagt</span></div>
               <div className="coach-mini"><small>GEMT VDOT</small><strong>{formatVdot(inputs.storedVdot)}</strong><span>Performance</span></div>
               <div className="coach-mini"><small>PROGRAMNIVEAU</small><strong>{Number.isFinite(inputs.programVdot) ? `VDOT ${formatVdot(inputs.programVdot)}+` : "–"}</strong><span>Reference</span></div>
@@ -577,7 +580,7 @@ export default function CoachPage({ setPage }) {
             <div className="coach-vdot-arrow">→</div>
             <div className="coach-mini"><small>COACHENS ESTIMAT</small><strong>{formatVdot(inputs.coachVdot.estimate)}</strong><span>{inputs.coachVdot.eligibleCount} relevante af {inputs.coachVdot.assessments.length}</span></div>
             <div className="coach-vdot-arrow">→</div>
-            <div className="coach-mini"><small>PROGRAMNIVEAU</small><strong>{Number.isFinite(inputs.programVdot) ? `${formatVdot(inputs.programVdot)}+` : "–"}</strong><span>{Number.isFinite(inputs.programVdot) && Number.isFinite(inputs.coachVdot.estimate) ? `Forskel ${formatVdot(inputs.programVdot - inputs.coachVdot.estimate)}` : "Ingen reference"}</span></div>
+            <div className="coach-mini"><small>PROGRAMNIVEAU</small><strong>{Number.isFinite(inputs.programVdot) ? `${formatVdot(inputs.programVdot)}+` : "–"}</strong><span>{Number.isFinite(inputs.programVdot) ? "Reference" : "Ikke fundet"}</span></div>
           </div>
           <div className="coach-vdot-guide"><strong>Coachens fortolkning</strong><br />{vdotInterpretation(inputs.storedVdot, inputs.coachVdot.estimate, inputs.programVdot)}</div>
           <div className="coach-vdot-actions">
