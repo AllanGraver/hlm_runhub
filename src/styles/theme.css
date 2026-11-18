@@ -1,0 +1,193 @@
+/* Optional Strava-inspired light palette; dark remains the default. */
+.theme-toggle {
+  position: fixed;
+  z-index: 20;
+  top: 14px;
+  right: 18px;
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border: 1px solid rgba(149, 163, 191, .28);
+  border-radius: 999px;
+  background: rgba(11, 17, 36, .86);
+  color: #dce7f5;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: #19d5ee;
+  color: #71e6f4;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid #19d5ee;
+  outline-offset: 3px;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  color: #263238;
+  background: #f4f6f7;
+}
+
+html[data-theme="light"] body {
+  background: #f4f6f7;
+  color: #263238;
+}
+
+html[data-theme="light"] .main {
+  background: #f4f6f7;
+  color: #263238;
+}
+
+html[data-theme="light"] .sidebar,
+html[data-theme="light"] .topbar {
+  background: #fff;
+  color: #263238;
+  border-color: #e1e6e9;
+}
+
+html[data-theme="light"] .sidebar { box-shadow: 4px 0 24px rgba(25, 45, 55, .06); }
+html[data-theme="light"] .brand > strong,
+html[data-theme="light"] .nav { color: #34434a; }
+html[data-theme="light"] .brand > small { color: #75838a; }
+html[data-theme="light"] .nav:hover,
+html[data-theme="light"] .nav.active { background: #fff0e8; color: #e65d19; }
+html[data-theme="light"] .brand > strong span { color: #e65d19; }
+
+html[data-theme="light"] .card,
+html[data-theme="light"] .coach-compact-card,
+html[data-theme="light"] .coach-analysis-output,
+html[data-theme="light"] .coach-data-details,
+html[data-theme="light"] .training-plan-banner,
+html[data-theme="light"] .team-training-card,
+html[data-theme="light"] .training-load-card,
+html[data-theme="light"] .race-center-card,
+html[data-theme="light"] .performance-card,
+html[data-theme="light"] .guide-card,
+html[data-theme="light"] .tools-card {
+  border-color: #e2e7e9;
+  background: #fff;
+  color: #263238;
+  box-shadow: 0 5px 20px rgba(30, 50, 60, .055);
+}
+
+html[data-theme="light"] h1,
+html[data-theme="light"] h2,
+html[data-theme="light"] h3,
+html[data-theme="light"] h4,
+html[data-theme="light"] strong,
+html[data-theme="light"] b,
+html[data-theme="light"] .page-title,
+html[data-theme="light"] .page-title h1,
+html[data-theme="light"] .coach-compact-recommendation h2 {
+  color: #263238;
+}
+
+html[data-theme="light"] p,
+html[data-theme="light"] small,
+html[data-theme="light"] label,
+html[data-theme="light"] .coach-small-copy,
+html[data-theme="light"] .training-plan-banner span,
+html[data-theme="light"] .training-rest,
+html[data-theme="light"] .training-load-note,
+html[data-theme="light"] .page-title p {
+  color: #68777e;
+}
+
+html[data-theme="light"] .coach-compact-recommendation,
+html[data-theme="light"] .coach-analysis-output {
+  background: linear-gradient(145deg, #fff, #f8fafb);
+  border-color: #e2e7e9;
+}
+
+html[data-theme="light"] .coach-mini,
+html[data-theme="light"] .coach-vdot-guide,
+html[data-theme="light"] .coach-vdot-activity,
+html[data-theme="light"] .coach-chart,
+html[data-theme="light"] .training-load-chart-wrap,
+html[data-theme="light"] .actual-training-detail,
+html[data-theme="light"] .team-training-table tbody td,
+html[data-theme="light"] .team-training-table tbody tr.training-day-row,
+html[data-theme="light"] .team-training-table tfoot td {
+  border-color: #e4e9eb;
+  background: #f7f9fa;
+  color: #34434a;
+}
+
+html[data-theme="light"] .coach-mini strong,
+html[data-theme="light"] .coach-analysis-output > div,
+html[data-theme="light"] .team-training-table tbody th,
+html[data-theme="light"] .team-training-table tbody td,
+html[data-theme="light"] .team-training-table tfoot th,
+html[data-theme="light"] .team-training-table tfoot td,
+html[data-theme="light"] .training-day-button,
+html[data-theme="light"] .club-day-workouts > span,
+html[data-theme="light"] .own-day-workouts > span {
+  color: #34434a;
+}
+
+html[data-theme="light"] .team-training-table thead th,
+html[data-theme="light"] .team-training-table tbody th small,
+html[data-theme="light"] .training-day-button small,
+html[data-theme="light"] .actual-activity-summary,
+html[data-theme="light"] .training-load-axis-label {
+  color: #75838a;
+}
+
+html[data-theme="light"] .team-training-table tbody tr.today th,
+html[data-theme="light"] .team-training-table tbody tr.today td,
+html[data-theme="light"] .team-training-table tbody tr.training-day-row.today {
+  background: #fff3ec;
+  border-color: #f4a477;
+}
+
+html[data-theme="light"] input,
+html[data-theme="light"] select,
+html[data-theme="light"] textarea,
+html[data-theme="light"] .team-training-toolbar button,
+html[data-theme="light"] .actual-run-button,
+html[data-theme="light"] .coach-choices button,
+html[data-theme="light"] .coach-questions button,
+html[data-theme="light"] .coach-toggle,
+html[data-theme="light"] .coach-chart-tabs button {
+  border-color: #d8e0e3;
+  background: #fff;
+  color: #34434a;
+}
+
+html[data-theme="light"] button:not(.primary):hover,
+html[data-theme="light"] .team-training-toolbar button:hover,
+html[data-theme="light"] .actual-run-button:hover {
+  border-color: #e65d19;
+  color: #d94f0d;
+}
+
+html[data-theme="light"] .theme-toggle {
+  border-color: #e4e8ea;
+  background: rgba(255, 255, 255, .92);
+  color: #45545a;
+  box-shadow: 0 2px 10px rgba(30, 50, 60, .08);
+}
+
+html[data-theme="light"] .theme-toggle:hover { color: #d94f0d; border-color: #e65d19; }
+html[data-theme="light"] .training-today-label { background: #e65d19; color: #fff; }
+html[data-theme="light"] .training-plan-hint { background: #fff8e8; color: #795b17; }
+html[data-theme="light"] .training-data-error,
+html[data-theme="light"] .coach-error { background: #fff0ef; color: #a63e36; }
+
+@media (max-width: 680px) {
+  .theme-toggle { top: 10px; right: 12px; min-height: 32px; padding: 5px 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle { transition: none; }
+}
