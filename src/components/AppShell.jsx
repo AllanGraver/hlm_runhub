@@ -6,12 +6,16 @@ import {
   Calculator,
   Footprints,
   Menu,
+  Moon,
+  Sun,
   Trophy,
   X,
 } from "lucide-react";
+import { useState } from "react";
 import { teams } from "../data/appData";
 import "../styles/branding.css";
 import "../styles/page-tabs.css";
+import "../styles/theme.css";
 import harlevLogo from "../assets/harlev-lob-motion.png";
 const nav = [
   ["training", "Træning", Footprints],
@@ -22,6 +26,18 @@ const nav = [
   ["tools", "Værktøjer", BookOpen],
   ["coach", "AI Coach", Bot],
 ];
+const THEME_STORAGE_KEY = "hlm_runhub_theme";
+
+function getSavedTheme() {
+  try {
+    return window.localStorage.getItem(THEME_STORAGE_KEY) === "light" ? "light" : "dark";
+  } catch {
+    return "dark";
+  }
+}
+
+document.documentElement.dataset.theme = getSavedTheme();
+
 export default function AppShell({
   page,
   setPage,
@@ -31,6 +47,21 @@ export default function AppShell({
   setMenu,
   children,
 }) {
+  const [lightTheme, setLightTheme] = useState(
+    () => document.documentElement.dataset.theme === "light",
+  );
+
+  function toggleTheme() {
+    const nextTheme = lightTheme ? "dark" : "light";
+    document.documentElement.dataset.theme = nextTheme;
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {
+      // Theme still changes for this session if storage is unavailable.
+    }
+    setLightTheme(nextTheme === "light");
+  }
+
   return (
     <div>
       <aside className={`sidebar ${menu ? "open" : ""}`}>
@@ -79,6 +110,16 @@ export default function AppShell({
               </select>
             </label>
           )}
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={lightTheme ? "Skift til mørkt tema" : "Skift til lyst tema"}
+            title={lightTheme ? "Skift til mørkt tema" : "Skift til lyst tema"}
+          >
+            {lightTheme ? <Moon size={16} aria-hidden="true" /> : <Sun size={16} aria-hidden="true" />}
+            <span>{lightTheme ? "Mørk" : "Lys"}</span>
+          </button>
         </header>
         {children}
       </main>
