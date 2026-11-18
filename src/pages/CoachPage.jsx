@@ -14,7 +14,7 @@ function loadCoachData() {
     const activities = (Array.isArray(stored.activities) ? stored.activities : [])
       .filter((activity) => {
         const type = activity.sportType ?? activity.sport_type ?? activity.type;
-        return !type || ["Run", "TrailRun", "VirtualRun"].includes(type);
+        return !type || ["Run", "TrailRun", "VirtualRun", "Treadmill"].includes(type);
       })
       .map((activity) => {
         const dateValue = activity.startDateLocal ?? activity.start_date_local ?? activity.startDate;
@@ -32,18 +32,27 @@ function loadCoachData() {
   }
 }
 
+function localDateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 function buildWeeklySummary(activities) {
   return Array.from({ length: 12 }, (_, index) => {
-    const start = new Date(Date.now() - (11 - index) * WEEK_MS);
-    start.setHours(0, 0, 0, 0);
-    start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
-    const end = new Date(start.getTime() + WEEK_MS);
-    const inWeek = activities.filter(({ date }) => date >= start && date < end);
+    const monday = new Date();
+    monday.setHours(12, 0, 0, 0);
+    monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7) - (11 - index) * 7);
+    const weekStart = localDateKey(monday);
+    const end = new Date(monday.getTime() + WEEK_MS);
+    const runs = activities.filter(({ date }) => date >= monday && date < end);
+    const distanceKm = runs.reduce((sum, item) => sum + (Number.isFinite(item.distanceKm) ? item.distanceKm : 0), 0);
+    const movingTimeSeconds = runs.reduce((sum, item) => sum + (Number.isFinite(item.movingTimeSeconds) ? item.movingTimeSeconds : 0), 0);
+    const pace = distanceKm > 0 && movingTimeSeconds > 0 ? Math.round(movingTimeSeconds / distanceKm) : null;
     return {
-      weekStart: start.toISOString().slice(0, 10),
-      runCount: inWeek.length,
-      distanceKm: Math.round(inWeek.reduce((sum, item) => sum + (Number.isFinite(item.distanceKm) ? item.distanceKm : 0), 0) * 10) / 10,
-      movingTimeSeconds: Math.round(inWeek.reduce((sum, item) => sum + (Number.isFinite(item.movingTimeSeconds) ? item.movingTimeSeconds : 0), 0)),
+      weekStart,
+      runCount: runs.length,
+      distanceKm: Math.round(distanceKm * 10) / 10,
+      longestRunKm: Math.round(Math.max(0, ...runs.map((run) => Number.isFinite(run.distanceKm) ? run.distanceKm : 0)) * 10) / 10,
+      averagePaceSecondsPerKm: pace !== null && pace >= 60 && pace <= 3600 ? pace : null,
     };
   });
 }
@@ -66,23 +75,11 @@ export default function CoachPage() {
     setError("");
     setAnalysis("");
     try {
+      // Match the exact schema validated by the RunHub Worker.
       const payload = {
-        schemaVersion: 3,
-        intent,
         goal: null,
         plan: null,
-        performanceMatch: { storedVdot: null, coachEstimatedVdot: null, confidence: "Begrænset", eligibleActivities: 0, analyzedActivities: 0 },
-        readiness,
-        trends: { recentFourWeekKm: Math.round(recentKm * 10) / 10 },
-        availableSignals: { heartRate: false, power: false, elevation: false, cadence: false },
         weeks,
-        recentActivities: storedData.activities.slice(0, 20).map(({ date, distanceKm, movingTimeSeconds }) => ({
-          date: date.toISOString().slice(0, 10),
-          distanceKm: Number.isFinite(distanceKm) ? Math.round(distanceKm * 100) / 100 : null,
-          movingTimeSeconds: Number.isFinite(movingTimeSeconds) ? movingTimeSeconds : null,
-          paceSecondsPerKm: Number.isFinite(distanceKm) && distanceKm > 0 && Number.isFinite(movingTimeSeconds) ? Math.round(movingTimeSeconds / distanceKm) : null,
-        })),
-        privacy: { excludesActivityNames: true, excludesActivityIds: true, excludesGpsData: true },
       };
       const result = await stravaApi(deviceId, "/api/runhub/coach", {
         method: "POST",
@@ -125,7 +122,7 @@ export default function CoachPage() {
       <Card className="coach-compact-card">
         <div className="coach-heading-row"><div><small>DAGLIGT CHECK-IN</small><h3>Hvordan har du det i dag?</h3><p className="coach-small-copy">Der er ikke noget rigtigt svar — brug det, der passer bedst.</p></div></div>
         <div className="coach-compact-grid">
-          {[["legs", "Ben", ["Friske", "Normale", "Tunge"]], ["energy", "Energi", ["God", "Normal", "Lav"]], ["sleep", "Søvn", ["God", "Okay", "Dårlig"]]].map(([key, label, choices]) => (
+          {[['legs', 'Ben', ['Friske', 'Normale', 'Tunge']], ['energy', 'Energi', ['God', 'Normal', 'Lav']], ['sleep', 'Søvn', ['God', 'Okay', 'Dårlig']]].map(([key, label, choices]) => (
             <div className="coach-mini" key={key}><strong>{label}</strong><div className="coach-choices">{choices.map((choice) => <button type="button" key={choice} className={readiness[key] === choice ? "active" : ""} aria-pressed={readiness[key] === choice} onClick={() => setReadiness((current) => ({ ...current, [key]: choice }))}>{choice}</button>)}</div></div>
           ))}
         </div>
